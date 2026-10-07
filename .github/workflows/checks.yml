@@ -1,0 +1,27 @@
+name: Source checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax
+        run: find wp-content deploy -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Public repository synchronization checks
+        run: php wp-content/plugins/chenjin-github/test-sync.php
+      - name: Private contact validation checks
+        run: php wp-content/plugins/chenjin-contact/test-validation.php
+      - name: JavaScript syntax
+        run: |
+          node --check wp-content/themes/chenjin-journal/theme.js
+          node --check wp-content/plugins/chenjin-github/projects.js
+          node --check tests/browser-check.cjs
+          node --check tests/public-check.cjs
+          node --check tests/contact-check.cjs
+          node --check tests/service-worker-check.cjs
+      - name: Deployment shell syntax
+        run: bash -n deploy/install.sh deploy/update.sh deploy/backup.sh

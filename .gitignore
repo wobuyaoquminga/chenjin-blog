@@ -1,0 +1,15 @@
+.private/
+.cache/
+artifacts/
+node_modules/
+wp-config.php
+wp-content/uploads/
+*.sql
+*.sql.gz
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+*.log
+__pycache__/

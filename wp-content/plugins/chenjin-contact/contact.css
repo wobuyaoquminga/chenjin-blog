@@ -1,0 +1,9 @@
+.chenjin-contact{max-width:680px;margin:0 auto;padding:28px;border:1px solid var(--ws-border,#e5e8e1);background:var(--ws-surface,#fffefa);color:var(--ws-text,#232b27);border-radius:12px}
+.chenjin-contact h2{margin:0 0 8px;font-size:1.5rem}.chenjin-contact-intro{margin:0 0 24px;color:var(--ws-muted,#768079)}
+.chenjin-contact form{display:grid;gap:10px}.chenjin-contact label{font-weight:600}.chenjin-contact label span{font-size:.8rem;font-weight:400;color:var(--ws-muted,#768079)}
+.chenjin-contact input,.chenjin-contact textarea{box-sizing:border-box;width:100%;padding:11px 13px;border:1px solid var(--ws-border,#e5e8e1);border-radius:6px;background:var(--ws-bg,#f8f7f3);color:var(--ws-text,#232b27);font:inherit}
+.chenjin-contact textarea{resize:vertical}.chenjin-contact input:focus,.chenjin-contact textarea:focus{outline:2px solid var(--ws-accent,#3b765c);outline-offset:1px}
+.chenjin-contact button{justify-self:start;margin-top:10px;padding:10px 20px;border:0;border-radius:6px;background:var(--ws-accent,#3b765c);color:#fff;font:inherit;font-weight:600;cursor:pointer}.chenjin-contact button:hover{background:var(--ws-accent-dark,#245940)}
+.chenjin-contact-notice{padding:12px 15px;border-radius:6px;background:var(--ws-tint,#eff3ed);color:var(--ws-text,#232b27)}.chenjin-contact-error{border-left:3px solid #a3473a}
+.chenjin-contact-trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+@media(max-width:600px){.chenjin-contact{padding:20px 16px}.chenjin-contact button{width:100%}}
