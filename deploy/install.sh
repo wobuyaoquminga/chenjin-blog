@@ -6,7 +6,7 @@ umask 077
 bundle=$(cd "$(dirname "$0")/.." && pwd)
 blog_root=/var/www/chenjin/blog
 site_url=${BLOG_URL:-https://121.43.101.242/blog}
-admin_email=${BLOG_ADMIN_EMAIL:-admin@example.invalid}
+admin_email=admin@example.invalid
 nginx_site=${BLOG_NGINX_SITE:-/etc/nginx/sites-available/chat-ip.conf}
 [[ -f "$nginx_site" ]] || { echo 'Existing HTTPS virtual host is required.' >&2; exit 1; }
 if [[ -f "$blog_root/wp-config.php" && ! -f /etc/chenjin-blog/managed-by ]]; then

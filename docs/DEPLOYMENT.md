@@ -26,14 +26,13 @@ PHP 使用按需启动进程池，最多三个子进程，每个内存上限 128
 
 ```bash
 sudo BLOG_URL=https://example.com/blog \
-  BLOG_ADMIN_EMAIL=your-admin@example.com \
   BLOG_NGINX_SITE=/etc/nginx/sites-available/example.conf \
   bash deploy/install.sh
 ```
 
 目标虚拟主机内应恰好有一行四空格缩进的 `listen 443 ssl;`。不满足时脚本停止，请先人工检查并在对应 HTTPS server 中加入 `include /etc/nginx/snippets/chenjin-blog.conf;`。不要向不属于此博客的 server 块添加路由。
 
-管理员邮箱应设为自己的真实邮箱；示例地址仅作占位，省略时脚本使用不投递邮件的 `admin@example.invalid`。邮箱地址和邮件服务密码不需要写进源码。对于已有的非本项目 WordPress 目录或已有的同名数据表，安装脚本会拒绝自动接管。
+本站使用不投递邮件的占位邮箱 `admin@example.invalid`，不填写个人邮箱；联系通过站内留言。对于已有的非本项目 WordPress 目录或已有的同名数据表，安装脚本会拒绝自动接管。
 
 ## 日常检查
 
