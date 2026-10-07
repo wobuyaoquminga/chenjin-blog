@@ -6,7 +6,7 @@
 
 **后台入口：<https://121.43.101.242/blog/wp-admin/>**
 
-**下载：** [v1.1.0 部署源码、News 子主题、插件与校验文件](https://github.com/wobuyaoquminga/chenjin-blog/releases/tag/v1.1.0)。
+**下载：** [v1.1.1 部署源码、News 子主题、插件与校验文件](https://github.com/wobuyaoquminga/chenjin-blog/releases/tag/v1.1.1)。
 
 ![博客首页](docs/screenshots/home-desktop.png)
 
@@ -26,14 +26,13 @@ WordPress 7.1.2 / PHP 8.3 / MySQL 8 / Nginx / WP-CLI 2.12.0。生产服务器已
 
 ```text
 wp-content/themes/chenjin-news/      Blocksy 子主题，本仓库维护
-wp-content/themes/chenjin-journal/   旧主题，保留供回退
 wp-content/plugins/chenjin-github/   GitHub 公开资源同步插件
 deploy/                            安装、更新、备份和服务器配置
 tests/                             公网与浏览器验收
 docs/                              使用、恢复、验证与截图
 ```
 
-这里发布子主题、旧主题、插件与部署代码。Blocksy 父主题、WordPress 内核和第三方插件从各自官方渠道安装，保留原许可证，避免将数据库、账号、上传附件和服务器秘密混入源码仓库。切换主题不删除现有文章、GitHub 项目插件或站内联系数据。
+这里发布子主题、插件与部署代码。Blocksy 父主题、WordPress 内核和第三方插件从各自官方渠道安装，保留原许可证，避免将数据库、账号、上传附件和服务器秘密混入源码仓库。切换主题不删除现有文章、GitHub 项目插件或站内联系数据。
 
 ## 安装与更新
 
@@ -54,7 +53,6 @@ sudo bash deploy/update.sh
 ```bash
 find wp-content deploy -name '*.php' -exec php -l {} \;
 php wp-content/plugins/chenjin-github/test-sync.php
-node --check wp-content/themes/chenjin-journal/theme.js
 node --check wp-content/themes/chenjin-news/reading.js
 node --check wp-content/plugins/chenjin-github/projects.js
 bash -n deploy/install.sh deploy/update.sh deploy/backup.sh

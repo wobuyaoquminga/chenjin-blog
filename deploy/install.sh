@@ -55,7 +55,6 @@ if ! wp_root core is-installed; then
 fi
 printf 'chenjin-blog\n' > /etc/chenjin-blog/managed-by
 printf '%s\n' "$nginx_site" > /etc/chenjin-blog/nginx-site
-cp -a "$bundle/wp-content/themes/chenjin-journal" "$blog_root/wp-content/themes/"
 cp -a "$bundle/wp-content/themes/chenjin-news" "$blog_root/wp-content/themes/"
 wp_root theme is-installed blocksy || wp_root theme install blocksy
 if [[ $(wp_root eval 'echo in_array("blocksy", (array) get_option("auto_update_themes", array()), true) ? "enabled" : "disabled";') != enabled ]]; then
@@ -66,6 +65,9 @@ cp -a "$bundle/wp-content/plugins/chenjin-contact" "$blog_root/wp-content/plugin
 rm -f "$blog_root/wp-content/plugins/chenjin-github/test-sync.php"
 rm -f "$blog_root/wp-content/plugins/chenjin-contact/test-validation.php"
 wp_root theme activate chenjin-news
+if wp_root theme is-installed chenjin-journal; then
+    wp_root theme delete chenjin-journal
+fi
 wp_root plugin activate chenjin-github
 wp_root plugin activate chenjin-contact
 wp_root plugin install slim-seo limit-login-attempts-reloaded --activate

@@ -8,4 +8,4 @@
 - [Limit Login Attempts Reloaded](https://wordpress.org/plugins/limit-login-attempts-reloaded/)：登录重试限制，由 WordPress 官方插件目录安装，许可以插件包声明为准。
 - Nginx、PHP、MySQL：使用 Ubuntu 和服务器既有软件源，保留各自许可证。
 
-`chenjin-news` 子主题、保留供回退的 `chenjin-journal` 旧主题与自定义插件由本项目维护，未复制第三方付费主题、字体、图标包或图库。所有项目下载链接指向原始 GitHub 仓库，其源码和发布包遵守各自许可证。
+`chenjin-news` 子主题与自定义插件由本项目维护，未复制第三方付费主题、字体、图标包或图库。所有项目下载链接指向原始 GitHub 仓库，其源码和发布包遵守各自许可证。

@@ -32,16 +32,6 @@ async function main() {
       assert.equal(await page.locator('.chenjin-news-cover img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'News covers');
     }
     await page.screenshot({ path: path.join(out, 'home-desktop.png'), fullPage: true });
-    const themeButton = page.locator('.theme-toggle');
-    if (await themeButton.count()) {
-      const before = await page.locator('html').getAttribute('data-theme');
-      await themeButton.click();
-      assert.notEqual(await page.locator('html').getAttribute('data-theme'), before);
-      const after = await page.locator('html').getAttribute('data-theme');
-      await page.reload({ waitUntil: 'networkidle' });
-      assert.equal(await page.locator('html').getAttribute('data-theme'), after);
-      await themeButton.click();
-    }
     await visit(base + '/projects/');
     const reposResponse = await fetch('https://api.github.com/users/wobuyaoquminga/repos?per_page=100&type=owner', { headers: { 'User-Agent': 'blog-qa' } });
     assert.ok(reposResponse.ok);
@@ -69,7 +59,7 @@ async function main() {
     const names = await page.locator('.ws-project-card').evaluateAll(cards => cards.map(c => c.dataset.name));
     assert.deepEqual(names, [...names].sort((a, b) => a.localeCompare(b)));
     await visit(base + '/articles/');
-    assert.ok(await page.locator('.post-card, .entry-card').count() >= 2);
+    assert.ok(await page.locator('.entry-card').count() >= 2);
     await visit(base + '/?s=' + encodeURIComponent('计数'));
     assert.match(await page.locator('main').innerText(), /计数/);
     await visit(base + '/?s=definitely-no-article-9381');
@@ -111,7 +101,7 @@ async function main() {
         const visitor = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
         const guest = await visitor.newPage();
         await guest.goto(qa.link, { waitUntil: 'networkidle' });
-        assert.match(await guest.locator('.chenjin-news-toc, .toc').innerText(), /目录验收/);
+        assert.match(await guest.locator('.chenjin-news-toc').innerText(), /目录验收/);
         await guest.locator('.copy-code').click();
         assert.equal(await guest.evaluate(() => navigator.clipboard.readText()), 'const verified = true;');
         await guest.locator('#comment').fill('临时验收评论，检查后自动删除。');
@@ -132,7 +122,7 @@ async function main() {
       }
     }
     assert.deepEqual(errors, [], 'Browser JavaScript errors');
-    console.log('Public pages, complete public repositories, resources, search/filter/sort, theme persistence, 404 and mobile layout passed.');
+    console.log('Public pages, complete public repositories, resources, search/filter/sort, 404 and mobile layout passed.');
   } finally {
     await browser.close();
   }

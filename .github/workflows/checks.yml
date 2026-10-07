@@ -17,7 +17,6 @@ jobs:
         run: php wp-content/plugins/chenjin-contact/test-validation.php
       - name: JavaScript syntax
         run: |
-          node --check wp-content/themes/chenjin-journal/theme.js
           node --check wp-content/themes/chenjin-news/reading.js
           node --check wp-content/plugins/chenjin-github/projects.js
           node --check tests/browser-check.cjs
