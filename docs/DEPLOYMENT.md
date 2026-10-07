@@ -1,6 +1,6 @@
 # 部署与维护
 
-当前入口为 `https://121.43.101.242/blog/`，使用既有 IP 证书和 Nginx HTTPS 虚拟主机。IP 地址下已有网盘、聊天 API 和校园站点，博客路由单独位于 `/blog/`。
+`deploy/` 是针对已有 MySQL 和 Nginx HTTPS 虚拟主机的 Ubuntu 24.04 子路径部署方案，博客位于 `/blog/`。默认值来自演示环境，部署自己的站点前必须审核脚本与配置；已有 WordPress 可直接使用 [组件安装指南](INSTALLATION.md)。
 
 同一地址上的网盘有根作用域 PWA worker。部署脚本从本机网盘服务生成兼容 worker，保留网盘缓存逻辑并排除博客导航；通过 `/sw.js` 的禁止缓存响应及时更新旧浏览器。生成的第三方 worker 不打包进源码。网盘前端升级后运行 `sudo python3 /opt/chenjin-blog/patch-cloudreve-worker.py` 重新生成。
 
@@ -12,7 +12,7 @@
 - 博客数据库与最小权限数据库用户：`chenjin_blog`
 - PHP-FPM：`/etc/php/8.3/fpm/pool.d/chenjin-blog.conf`
 - Nginx 片段：`/etc/nginx/snippets/chenjin-blog.conf`
-- 现有 HTTPS 主机：`/etc/nginx/sites-available/chat-ip.conf`
+- HTTPS 主机：使用自己的路径，通过 `BLOG_NGINX_SITE` 指定。
 - 凭据：`/etc/chenjin-blog/`，root 专用。
 - 备份：`/var/backups/chenjin-blog/`，不在 Web 根目录。
 - 定时任务：`/etc/cron.d/chenjin-blog`
@@ -45,7 +45,7 @@ sudo tail -n 50 /var/log/chenjin-blog-cron.log
 sudo tail -n 50 /var/log/chenjin-blog-backup.log
 ```
 
-IP 证书由已有的 `chat-certbot-renew.timer` 维护，博客共用证书。应持续监控续签结果；现有续签机制属于服务器基础设施，源码仓库不包含私钥。
+证书申请和续签由服务器已有的证书管理方案负责，应单独验证续签和 Nginx 重载。源码仓库不包含证书私钥。
 
 ## 定制更新
 

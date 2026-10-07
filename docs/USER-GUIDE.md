@@ -1,6 +1,6 @@
 # 使用指南
 
-后台：<https://121.43.101.242/blog/wp-admin/>，用户名 `chenjin`。密码保存在你的本机私密交付文件和服务器 `/etc/chenjin-blog/access.txt`，不要上传该文件。
+登录自己的 WordPress 管理后台，使用安装时创建的管理员账号。演示站点仅供公开浏览，不提供共享管理账号。服务器脚本安装者可在 root 专用的 `/etc/chenjin-blog/access.txt` 查看初始凭据，并及时修改密码；不要将该文件上传到仓库。
 
 ## 发布文章
 

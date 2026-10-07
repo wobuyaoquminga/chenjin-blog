@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 私下报告安全问题
+    url: https://121.43.101.242/blog/contact/
+    about: 通过陈今的站内联系页私下报告；不要公开漏洞细节或秘密。
