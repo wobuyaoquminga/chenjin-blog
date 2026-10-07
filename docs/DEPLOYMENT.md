@@ -49,7 +49,7 @@ IP 证书由已有的 `chat-certbot-renew.timer` 维护，博客共用证书。�
 
 ## 定制更新
 
-上传新版本源码到受信任的目录后运行 `sudo bash deploy/update.sh`。脚本先备份，再更新定制主题和同步插件；不重写后台文章、页面和密码。可执行 `wp core update` / `wp plugin update --all` 进行官方升级，升级前先备份并检查插件兼容性。
+上传新版本源码到受信任的目录后运行 `sudo bash deploy/update.sh`。脚本先备份，再安装所需的官方 Blocksy 父主题、更新并启用 `chenjin-news` 子主题与自定义插件；不重写后台文章、页面和密码。News 初始配置只执行一次，之后保留后台自定义外观设置；父主题开启官方自动更新。旧主题 `chenjin-journal` 保留供手动回退。可执行 `wp core update` / `wp plugin update --all` 进行官方升级，升级前先备份并检查插件兼容性。
 
 ## 以后换域名
 

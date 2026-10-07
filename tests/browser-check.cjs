@@ -25,6 +25,12 @@ async function main() {
     await visit(base + '/');
     assert.match(await page.title(), /陈今/);
     assert.equal(await page.locator('h1').count(), 1);
+    if (await page.locator('#chenjin-news-css').count()) {
+      assert.ok(await page.locator('.entry-card').count() >= 2);
+      const columns = await page.locator('.entries').evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length);
+      assert.equal(columns, 2, 'News desktop grid');
+      assert.equal(await page.locator('.chenjin-news-cover img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'News covers');
+    }
     await page.screenshot({ path: path.join(out, 'home-desktop.png'), fullPage: true });
     const themeButton = page.locator('.theme-toggle');
     if (await themeButton.count()) {
@@ -63,11 +69,11 @@ async function main() {
     const names = await page.locator('.ws-project-card').evaluateAll(cards => cards.map(c => c.dataset.name));
     assert.deepEqual(names, [...names].sort((a, b) => a.localeCompare(b)));
     await visit(base + '/articles/');
-    assert.ok(await page.locator('.post-card').count() >= 2);
+    assert.ok(await page.locator('.post-card, .entry-card').count() >= 2);
     await visit(base + '/?s=' + encodeURIComponent('计数'));
     assert.match(await page.locator('main').innerText(), /计数/);
     await visit(base + '/?s=definitely-no-article-9381');
-    assert.match(await page.locator('main').innerText(), /没有|暂无|未找到/);
+    assert.match(await page.locator('main').innerText(), /没有|暂无|未找到|找不到|未能找到|无结果/);
     await visit(base + '/diandian-counter/');
     assert.ok(await page.locator('#commentform').count());
     await page.screenshot({ path: path.join(out, 'article-desktop.png'), fullPage: true });
@@ -102,9 +108,12 @@ async function main() {
         });
         postId = qa.postId; mediaId = qa.mediaId;
         assert.ok(postId && mediaId);
-        const visitor = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+        const visitor = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
         const guest = await visitor.newPage();
         await guest.goto(qa.link, { waitUntil: 'networkidle' });
+        assert.match(await guest.locator('.chenjin-news-toc, .toc').innerText(), /目录验收/);
+        await guest.locator('.copy-code').click();
+        assert.equal(await guest.evaluate(() => navigator.clipboard.readText()), 'const verified = true;');
         await guest.locator('#comment').fill('临时验收评论，检查后自动删除。');
         await guest.locator('#author').fill('博客验收');
         await guest.locator('#email').fill('blog-qa@example.invalid');

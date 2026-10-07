@@ -1,0 +1,41 @@
+/*
+Theme Name: Chenjin News
+Description: 陈今的中文博客，基于官方 Blocksy 的 News 文章布局。
+Author: 陈今
+Version: 1.1.0
+Template: blocksy
+Requires at least: 6.7
+Requires PHP: 7.4
+License: GPL-2.0-or-later
+Text Domain: chenjin-news
+*/
+:root{--ws-text:#26313d;--ws-muted:#6b7280;--ws-accent:#2872fa;--ws-surface:#fff;--ws-border:#e5e9ef;--theme-font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+body{font-family:var(--theme-font-family);background:#f7f8fa}
+.chenjin-news-intro{margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid #e5e9ef}
+.chenjin-news-intro .chenjin-news-label{font-size:12px;letter-spacing:.18em;color:#2872fa;margin-bottom:12px}
+.chenjin-news-intro h1{font-size:clamp(28px,4vw,42px);line-height:1.4;letter-spacing:-.025em;margin-bottom:12px}
+.chenjin-news-intro p{color:#6b7280;margin:0;line-height:1.8}
+.chenjin-news-intro a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600}
+.entry-card{overflow:hidden;border-radius:12px!important;box-shadow:0 8px 24px rgba(22,34,52,.035)!important}
+.entry-card .entry-title{font-size:26px;line-height:1.55;overflow-wrap:anywhere}
+.entry-card .entry-meta{font-size:13px}
+.ct-header [data-row="middle"]{--height:88px}
+.entry-card .entry-excerpt{line-height:1.9}
+.home .entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.home .entry-card{background:#fff}
+.home .entries .entry-card{--theme-heading-2-font-size:26px}
+.chenjin-news-all{text-align:center;margin:36px 0 0;font-size:14px;font-weight:600}
+.chenjin-news-cover{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#edf2f8}
+.chenjin-news-cover img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.chenjin-news-cover:hover img{transform:scale(1.025)}
+.entry-content{line-height:1.95;overflow-wrap:anywhere}
+.entry-content h2,.entry-content h3{scroll-margin-top:90px}
+.chenjin-news-toc{padding:20px 24px;background:#f4f6fa;border:1px solid #e5e9ef;border-radius:10px;margin:0 0 30px;font-size:14px}
+.chenjin-news-toc summary{font-weight:600;cursor:pointer}.chenjin-news-toc ol{margin:12px 0 0;padding-left:20px}.chenjin-news-toc li{margin:5px 0}.chenjin-news-toc .toc__sub{margin-left:14px}
+.entry-content pre{position:relative;overflow:auto;padding-top:44px}
+.copy-code{position:absolute;right:10px;top:8px;min-height:28px;padding:3px 10px;font-size:12px;border-radius:5px}
+.ct-footer-copyright a{margin-left:14px}
+.ws-project-controls input,.ws-project-controls select{max-width:100%}
+:focus-visible{outline:2px solid #2872fa;outline-offset:3px}
+@media(max-width:689px){.home .entries{grid-template-columns:minmax(0,1fr);gap:24px}.chenjin-news-intro{margin-bottom:25px;padding-bottom:22px}.entry-card .entry-title{font-size:21px}.chenjin-news-toc{padding:16px}.ct-footer-copyright a{display:inline-block;margin:8px}}
+@media(prefers-reduced-motion:reduce){.chenjin-news-cover img{transition:none}}

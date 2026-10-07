@@ -8,11 +8,19 @@ root=/var/www/chenjin/blog
 /opt/chenjin-blog/backup.sh
 find "$bundle/wp-content" -name '*.php' -exec php -l {} \;
 cp -a "$bundle/wp-content/themes/chenjin-journal" "$root/wp-content/themes/"
+cp -a "$bundle/wp-content/themes/chenjin-news" "$root/wp-content/themes/"
+sudo -u www-data /usr/local/bin/wp --path="$root" theme is-installed blocksy || sudo -u www-data /usr/local/bin/wp --path="$root" theme install blocksy
+if [[ $(sudo -u www-data /usr/local/bin/wp --path="$root" eval 'echo in_array("blocksy", (array) get_option("auto_update_themes", array()), true) ? "enabled" : "disabled";') != enabled ]]; then
+    sudo -u www-data /usr/local/bin/wp --path="$root" theme auto-updates enable blocksy
+fi
+sudo -u www-data /usr/local/bin/wp --path="$root" language theme install blocksy zh_CN
 cp -a "$bundle/wp-content/plugins/chenjin-github" "$root/wp-content/plugins/"
 cp -a "$bundle/wp-content/plugins/chenjin-contact" "$root/wp-content/plugins/"
 rm -f "$root/wp-content/plugins/chenjin-github/test-sync.php"
 rm -f "$root/wp-content/plugins/chenjin-contact/test-validation.php"
-chown -R www-data:www-data "$root/wp-content/themes/chenjin-journal" "$root/wp-content/plugins/chenjin-github" "$root/wp-content/plugins/chenjin-contact"
+chown -R www-data:www-data "$root/wp-content/themes/chenjin-journal" "$root/wp-content/themes/chenjin-news" "$root/wp-content/plugins/chenjin-github" "$root/wp-content/plugins/chenjin-contact"
+sudo -u www-data /usr/local/bin/wp --path="$root" theme activate chenjin-news
+sudo -u www-data /usr/local/bin/wp --path="$root" eval-file "$bundle/deploy/configure-news.php"
 install -m 755 "$bundle/deploy/patch-cloudreve-worker.py" /opt/chenjin-blog/patch-cloudreve-worker.py
 python3 /opt/chenjin-blog/patch-cloudreve-worker.py
 install -m 644 "$bundle/deploy/nginx-blog.conf" /etc/nginx/snippets/chenjin-blog.conf

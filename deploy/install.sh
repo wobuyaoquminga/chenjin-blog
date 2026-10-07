@@ -56,18 +56,25 @@ fi
 printf 'chenjin-blog\n' > /etc/chenjin-blog/managed-by
 printf '%s\n' "$nginx_site" > /etc/chenjin-blog/nginx-site
 cp -a "$bundle/wp-content/themes/chenjin-journal" "$blog_root/wp-content/themes/"
+cp -a "$bundle/wp-content/themes/chenjin-news" "$blog_root/wp-content/themes/"
+wp_root theme is-installed blocksy || wp_root theme install blocksy
+if [[ $(wp_root eval 'echo in_array("blocksy", (array) get_option("auto_update_themes", array()), true) ? "enabled" : "disabled";') != enabled ]]; then
+    wp_root theme auto-updates enable blocksy
+fi
 cp -a "$bundle/wp-content/plugins/chenjin-github" "$blog_root/wp-content/plugins/"
 cp -a "$bundle/wp-content/plugins/chenjin-contact" "$blog_root/wp-content/plugins/"
 rm -f "$blog_root/wp-content/plugins/chenjin-github/test-sync.php"
 rm -f "$blog_root/wp-content/plugins/chenjin-contact/test-validation.php"
-wp_root theme activate chenjin-journal
+wp_root theme activate chenjin-news
 wp_root plugin activate chenjin-github
 wp_root plugin activate chenjin-contact
 wp_root plugin install slim-seo limit-login-attempts-reloaded --activate
 wp_root plugin auto-updates enable slim-seo limit-login-attempts-reloaded
 wp_root language core install zh_CN --activate
 wp_root language plugin install --all zh_CN
+wp_root language theme install blocksy zh_CN
 wp_root eval-file "$bundle/deploy/seed.php"
+wp_root eval-file "$bundle/deploy/configure-news.php"
 wp_root rewrite structure '/%postname%/'
 wp_root option update timezone_string Asia/Shanghai
 wp_root option update blogdescription '记录开发与创作，分享项目与资源。'

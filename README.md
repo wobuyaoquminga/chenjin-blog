@@ -1,20 +1,20 @@
 # 陈今的个人博客
 
-以 [WordPress](https://github.com/WordPress/WordPress) 为成熟内容管理基础，提供中文后台、独立个人主题和 GitHub 开源资源目录。
+以 [WordPress](https://github.com/WordPress/WordPress) 为内容管理基础，采用 Blocksy 新闻风格主题与本仓库的 `chenjin-news` 子主题，提供中文后台和 GitHub 开源资源目录。
 
 **在线博客：<https://121.43.101.242/blog/>**
 
 **后台入口：<https://121.43.101.242/blog/wp-admin/>**
 
-**下载：** [部署源码、主题、插件与校验文件](https://github.com/wobuyaoquminga/chenjin-blog/releases/tag/v1.0.1)。
+**下载：** [v1.1.0 部署源码、News 子主题、插件与校验文件](https://github.com/wobuyaoquminga/chenjin-blog/releases/tag/v1.1.0)。
 
 ![博客首页](docs/screenshots/home-desktop.png)
 
 ## 功能
 
 - 文章：区块编辑器、草稿、修订、定时发布、分类、标签、特色图片、附件、搜索、分页与 RSS。
-- 阅读：响应式布局、深浅主题、文章目录、代码复制、上一篇/下一篇、评论与回复。评论需要站长审核。
-- 项目：自动同步 `wobuyaoquminga` 全部公开仓库；搜索、语言筛选、排序、源码、README、Issues、版本发布与源码 ZIP。私有仓库不公开。
+- 阅读：浅色新闻风格文章列表、响应式文章页、文章目录、代码复制、上一篇/下一篇、评论与回复。评论需要站长审核。
+- 项目：导航进入项目全目录，自动同步 `wobuyaoquminga` 全部公开仓库；搜索、语言筛选、排序、源码、README、Issues、版本发布与源码 ZIP。私有仓库不公开。
 - 管理：中文后台、菜单、Logo、媒体库、用户角色、导入/导出；站点与正文可以在后台修改。
 - 联系：无需邮箱的站内留言，只在站长后台保存与查看。
 - SEO：Slim SEO 自动生成元信息、社交分享标签与 sitemap。无需配置付费服务。
@@ -25,14 +25,15 @@
 WordPress 7.1.2 / PHP 8.3 / MySQL 8 / Nginx / WP-CLI 2.12.0。生产服务器已有 Nginx、MySQL 和受信任的 IP HTTPS 证书，本项目复用这些基础设施。
 
 ```text
-wp-content/themes/chenjin-journal/   原创中文主题
+wp-content/themes/chenjin-news/      Blocksy 子主题，本仓库维护
+wp-content/themes/chenjin-journal/   旧主题，保留供回退
 wp-content/plugins/chenjin-github/   GitHub 公开资源同步插件
 deploy/                            安装、更新、备份和服务器配置
 tests/                             公网与浏览器验收
 docs/                              使用、恢复、验证与截图
 ```
 
-这里发布定制主题、插件与部署代码。WordPress 内核和第三方插件从各自官方渠道安装，保留原许可证，避免将数据库、账号、上传附件和服务器秘密混入源码仓库。
+这里发布子主题、旧主题、插件与部署代码。Blocksy 父主题、WordPress 内核和第三方插件从各自官方渠道安装，保留原许可证，避免将数据库、账号、上传附件和服务器秘密混入源码仓库。切换主题不删除现有文章、GitHub 项目插件或站内联系数据。
 
 ## 安装与更新
 
@@ -40,7 +41,7 @@ docs/                              使用、恢复、验证与截图
 
 ```bash
 sudo bash deploy/install.sh
-# 已安装后，只更新本仓库的主题与插件：
+# 已安装后，更新本仓库的子主题与插件：
 sudo bash deploy/update.sh
 ```
 
@@ -54,6 +55,7 @@ sudo bash deploy/update.sh
 find wp-content deploy -name '*.php' -exec php -l {} \;
 php wp-content/plugins/chenjin-github/test-sync.php
 node --check wp-content/themes/chenjin-journal/theme.js
+node --check wp-content/themes/chenjin-news/reading.js
 node --check wp-content/plugins/chenjin-github/projects.js
 bash -n deploy/install.sh deploy/update.sh deploy/backup.sh
 ```
@@ -62,7 +64,7 @@ bash -n deploy/install.sh deploy/update.sh deploy/backup.sh
 
 ## 许可证与贡献
 
-自定义主题、插件和部署代码使用 GPL-2.0-or-later；WordPress 与第三方插件保留其原许可证。博客文章、截图中的个人资料和项目下载资源分别适用其自身声明，不因这个源码许可证自动变成可任意再发布的内容。
+自定义主题、插件和部署代码使用 GPL-2.0-or-later；WordPress、Blocksy 父主题与第三方插件保留其原许可证。博客文章、截图中的个人资料和项目下载资源分别适用其自身声明，不因这个源码许可证自动变成可任意再发布的内容。
 
 见 [贡献说明](CONTRIBUTING.md)、[安全说明](SECURITY.md)、[更新记录](CHANGELOG.md) 和 [第三方来源](THIRD-PARTY.md)。
 
