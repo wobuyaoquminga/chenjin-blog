@@ -6,7 +6,7 @@
 
 基于 WordPress 的中文个人博客，包含 News 风格子主题、GitHub 公开项目目录和无需邮箱的私密联系表单。适合在个人博客中同时发布文章、展示开源作品和提供项目下载入口。
 
-[在线演示](https://121.43.101.242/blog/) · [项目资源页](https://121.43.101.242/blog/projects/) · [下载最新版本](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) · [报告问题](https://github.com/wobuyaoquminga/chenjin-blog/issues)
+[在线演示](https://nixiang.me/blog/) · [项目资源页](https://nixiang.me/blog/projects/) · [下载最新版本](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) · [报告问题](https://github.com/wobuyaoquminga/chenjin-blog/issues)
 
 ![桌面首页](docs/screenshots/home-desktop.png)
 
@@ -20,7 +20,7 @@
 ## 功能
 
 - **文章与阅读**：使用 WordPress 原生文章、分类、标签、草稿、修订、定时发布、媒体、搜索、分页和 RSS；子主题提供文章目录、代码复制及桌面/手机布局。
-- **项目与下载**：分页读取 GitHub 公开仓库，包含 Fork 与归档项目；支持搜索、语言筛选、排序、README、源码、Issues、最新 Release 和附件下载。同步失败保留最近成功的缓存。
+- **项目与下载**：分页读取 GitHub 公开仓库，包含 Fork 与归档项目；支持搜索、语言筛选、排序、README、源码、Issues、最新 Release 和附件下载。项目卡片可展开功能介绍、使用步骤、许可证、技术标签和部署文档；同步失败保留最近成功的缓存。
 - **私密联系**：访客填写昵称、主题和正文，无需邮箱；管理员在「站内来信」查看和删除。来信不进入公开搜索、RSS 或 REST API。
 - **管理与运维**：中文后台、评论审核、可自定义导航和 Logo；服务器部署方案包含独立 PHP-FPM、定时任务、登录重试限制与数据库/文件备份。
 
@@ -30,9 +30,9 @@
 
 从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件：
 
-- `chenjin-blog-1.1.2.zip`：完整源码、部署脚本、文档和截图。
+- `chenjin-blog-1.2.0.zip`：完整源码、部署脚本、文档和截图。
 - `chenjin-news-1.1.1.zip`：可通过 WordPress 后台上传的子主题。
-- `chenjin-github-1.0.0.zip`：GitHub 公开项目同步插件。
+- `chenjin-github-1.1.0.zip`：GitHub 公开项目同步与详情插件。
 - `chenjin-contact-1.0.0.zip`：站内联系插件。
 - `SHA256SUMS.txt`：上述文件的 SHA-256 校验值。
 
@@ -113,4 +113,4 @@ docs/                              文档与截图
 
 本仓库自定义代码以 [GPL-2.0-or-later](LICENSE) 发布，上游组件保留各自许可证。文章和各项目下载资源适用其自身声明。
 
-功能问题请提交 [Issue](https://github.com/wobuyaoquminga/chenjin-blog/issues/new/choose)，修复欢迎提交 Pull Request。安全问题或私密联系请使用 [站内联系](https://121.43.101.242/blog/contact/)，不要在公开仓库提交个人资料、密码、Cookie、私钥或数据库。
+功能问题请提交 [Issue](https://github.com/wobuyaoquminga/chenjin-blog/issues/new/choose)，修复欢迎提交 Pull Request。安全问题或私密联系请使用 [站内联系](https://nixiang.me/blog/contact/)，不要在公开仓库提交个人资料、密码、Cookie、私钥或数据库。

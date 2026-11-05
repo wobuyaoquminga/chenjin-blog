@@ -26,6 +26,12 @@ function register_activation_hook($file, $callback) {}
 function register_deactivation_hook($file, $callback) {}
 function add_action($hook, $callback) {}
 function add_shortcode($name, $callback) {}
+function esc_html($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
+function esc_attr($value) { return esc_html($value); }
+function esc_url($value) { return esc_html($value); }
+function wp_date($format, $time = null) { return gmdate($format, $time ?? time()); }
+function shortcode_atts($defaults, $atts, $name) { return array_merge($defaults, $atts); }
+function size_format($size, $precision) { return (string) $size; }
 
 require __DIR__ . '/chenjin-github.php';
 
@@ -33,7 +39,10 @@ function repo($id, $private = false) {
     return array('id' => $id, 'name' => 'repo-' . $id, 'owner' => array('login' => WS_GITHUB_USER),
         'private' => $private, 'description' => '', 'language' => 'PHP', 'stargazers_count' => $id,
         'updated_at' => '2026-01-01T00:00:00Z', 'archived' => false, 'fork' => true,
-        'has_issues' => true, 'default_branch' => 'feature/one', 'homepage' => 'https://example.org');
+        'has_issues' => true, 'default_branch' => 'feature/one', 'homepage' => 'https://example.org',
+        'topics' => array('offline-first', '<script>bad</script>', 42),
+        'license' => array('spdx_id' => 'MIT'), 'forks_count' => 3,
+        'created_at' => '2025-01-01T00:00:00Z', 'pushed_at' => '2026-01-01T00:00:00Z');
 }
 function response($body, $code = 200) { return array('code' => $code, 'body' => json_encode($body)); }
 function check($condition, $message) { if (!$condition) { throw new Exception($message); } }
@@ -54,6 +63,8 @@ check(count($snapshot['repos']) === 100 && $snapshot['repos'][6]['name'] === 're
 check(count($requests) === 102 && strpos($requests[1][0], 'page=2') !== false, 'Page 2 or releases were not fetched');
 check($requests[0][1]['redirection'] === 0, 'Redirects must be disabled');
 check(count($snapshot['repos'][0]['release']['assets']) === 1, 'Release asset URL validation failed');
+check($snapshot['repos'][0]['topics'] === array('offline-first'), 'Untrusted topic data was not filtered');
+check($snapshot['repos'][0]['license'] === 'MIT' && $snapshot['repos'][0]['forks'] === 3, 'Project metadata missing');
 $responses = array(response(array(repo(1))), response(array(), 503));
 check(ws_github_sync() === 1, 'Partial release failure interrupted repository sync');
 $partial = get_option(WS_GITHUB_DATA);
@@ -63,4 +74,27 @@ $responses = array(response(array(repo(999)), 403));
 check(is_wp_error(ws_github_sync()), 'HTTP failure was ignored');
 check(get_option(WS_GITHUB_DATA) === $partial, 'Failure replaced the last good snapshot');
 check((bool) get_option(WS_GITHUB_ERROR), 'Failure status was not saved');
+
+$base = 'https://github.com/' . WS_GITHUB_USER . '/repo-1';
+$profile = array(
+    'features' => array('<script>alert(1)</script>'),
+    'getting_started' => array('Download from the repository'),
+    'notes' => array('Only reviewed public information'),
+    'links' => array(
+        array('label' => 'Valid documentation', 'url' => $base . '/blob/main/README.md'),
+        array('label' => 'External link', 'url' => 'https://example.com/private'),
+        array('label' => 'Injected link', 'url' => 'javascript:alert(1)'),
+    ),
+    'verified_on' => '2026-11-05',
+);
+ob_start();
+ws_github_render_details($snapshot['repos'][0], $profile, $base);
+$html = ob_get_clean();
+check(strpos($html, '<script>') === false && strpos($html, '&lt;script&gt;') !== false, 'Detail content must be escaped');
+check(strpos($html, 'Valid documentation') !== false && strpos($html, 'example.com/private') === false && strpos($html, 'javascript:') === false, 'Detail links must stay in the public repository');
+check(strpos($html, '<ol>') !== false && strpos($html, 'MIT') !== false && strpos($html, '2025-01-01') !== false, 'Detail sections or metadata missing');
+check(ws_github_project_details('unknown-future-project') === array(), 'New projects must have a safe detail fallback');
+check(!empty(ws_github_project_details('chenjin-blog')['features']), 'Reviewed project catalog missing');
+$page = ws_github_shortcode(array());
+check(strpos($page, 'ws-project-details') !== false && strpos($page, 'README') !== false, 'Existing cached projects must render details without re-sync');
 echo "同步检查通过\n";

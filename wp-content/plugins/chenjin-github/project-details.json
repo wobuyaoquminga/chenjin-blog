@@ -1,0 +1,123 @@
+{
+  "chatapp-secure": {
+    "title": "Chat 一对一通讯",
+    "summary": "可自行部署的开源一对一通讯项目，包含 Windows 客户端、Android 客户端和 Java 服务器。当前为开发验证版，适合自行管理服务端并了解消息加密边界的使用者。",
+    "features": [
+      "联系人同意后进行一对一文字聊天，文字使用 libsignal 加密，服务端转发并暂存密文。",
+      "向已接受的联系人发送图片、视频及最大 10 MiB 的文件，附件内容在客户端加密。",
+      "发送一次位置或在应用处于前台且在线时共享最长一小时的实时位置。",
+      "进行一对一语音和视频通话，媒体链路使用 WebRTC DTLS-SRTP。",
+      "在设备本地加密保存聊天记录，并按关键词或日期查找。"
+    ],
+    "getting_started": [
+      "在发布页下载对应平台的安装包，并按随包提供的 SHA256.txt 核对文件。",
+      "准备自己信任的 Chat 服务器；远程连接应使用可信证书的 HTTPS/WSS。",
+      "Windows 用户完整解压 ZIP 后启动客户端；Android 用户按原安装渠道和签名选择 APK。",
+      "添加服务器地址并注册或登录，向对方发起联系；获得同意后通过可信的其他渠道核对安全码。"
+    ],
+    "notes": [
+      "开发验证版尚未经过独立安全审计；当前不支持群聊和多设备同步。",
+      "通话信令尚未用 Signal 会话加密或绑定安全码，不能视为经 Signal 身份认证的端到端通话。",
+      "Android 应用被系统停止后没有消息或来电推送；本地密钥或应用数据丢失后无法从服务器恢复聊天历史。"
+    ],
+    "links": [
+      { "label": "下载与版本", "url": "https://github.com/wobuyaoquminga/chatapp-secure/releases" },
+      { "label": "部署说明", "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/deploy/ubuntu/README.md" },
+      { "label": "验证范围", "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/VALIDATION.md" }
+    ],
+    "sources": [
+      "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/README.md"
+    ],
+    "verified_on": "2026-11-05"
+  },
+  "chenjin-blog": {
+    "title": "陈今博客",
+    "summary": "基于 WordPress 的中文个人博客，提供 News 风格子主题、GitHub 公开项目目录和无需邮箱的站内联系表单。适合发布文章、展示开源项目并提供原仓库下载入口。",
+    "features": [
+      "使用 WordPress 的文章、分类、标签、草稿、修订、搜索和 RSS，子主题提供文章目录与代码复制。",
+      "同步 GitHub 公开仓库，项目页支持搜索、语言筛选、排序及源码和发布附件入口。",
+      "访客可填写昵称、主题和正文向管理员发送站内来信，无需提供邮箱。",
+      "提供中文后台、评论审核和导航、Logo 等站点外观配置。",
+      "仓库包含 Ubuntu 部署、备份和恢复相关文档与脚本。"
+    ],
+    "getting_started": [
+      "先在测试站点备份现有 WordPress，并安装官方 Blocksy 父主题。",
+      "从发布页获取 News 子主题、GitHub 项目插件和站内联系插件，上传并启用。",
+      "创建文章页、项目页和联系页，在后两者分别添加 [ws_projects] 与 [chenjin_contact] 短代码。",
+      "按安装指南配置项目同步账号，再执行同步并设置站点菜单。"
+    ],
+    "notes": [
+      "发布包不包含 WordPress 内核、Blocksy 父主题、生产数据库或账号凭据。",
+      "当前 GitHub 同步账号需修改插件常量，尚无后台切换选项；匿名 API 访问受请求额度和网络条件限制。",
+      "站内联系仅保存管理员可见来信，不提供邮件通知或双向聊天。"
+    ],
+    "links": [
+      { "label": "下载组件", "url": "https://github.com/wobuyaoquminga/chenjin-blog/releases/latest" },
+      { "label": "安装指南", "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/INSTALLATION.md" },
+      { "label": "部署与更新", "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/DEPLOYMENT.md" }
+    ],
+    "sources": [
+      "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/README.md"
+    ],
+    "verified_on": "2026-11-05"
+  },
+  "diandian-counter": {
+    "title": "点点计数",
+    "summary": "离线使用的任务计数器，提供可直接打开的浏览器版和基于系统 WebView 的 Android 版。无需账号或第三方服务，数据保存在当前设备的本地存储中。",
+    "features": [
+      "创建多个任务及计数类型，点击类型名称加一，也可手动加减，数值最低为零。",
+      "保存当前任务页面作为记录，后续计数不会改动已保存页面。",
+      "查看每次加减明细、搜索历史记录，并删除单条历史。",
+      "将全部数据或某次保存页面导出为 JSON 文件。"
+    ],
+    "getting_started": [
+      "电脑用户从发布页下载网页 ZIP，完整解压后双击 index.html。",
+      "Android 8.0 及以上用户从发布页下载 APK，按系统提示安装，并确保系统 WebView 可用。",
+      "首次打开点击“新建任务”，随后添加计数类型。",
+      "定期在历史记录中导出 JSON 留档，并用发布页提供的 SHA256.txt 核对下载文件。"
+    ],
+    "notes": [
+      "当前只有 JSON 导出，没有导入功能。",
+      "不同浏览器与 Android 应用的数据不会自动同步；清除应用数据或卸载应用可能丢失记录。",
+      "仓库记录的 APK 验证不包含真机安装及系统文件选择器导出的实测。"
+    ],
+    "links": [
+      { "label": "下载最新版", "url": "https://github.com/wobuyaoquminga/diandian-counter/releases/latest" },
+      { "label": "Android 说明", "url": "https://github.com/wobuyaoquminga/diandian-counter/blob/main/android/README.md" }
+    ],
+    "sources": [
+      "https://github.com/wobuyaoquminga/diandian-counter/blob/main/README.md"
+    ],
+    "verified_on": "2026-11-05"
+  },
+  "my-cloud-drive": {
+    "title": "我的网盘部署项目",
+    "summary": "基于 Cloudreve Community 的个人网盘部署项目，提供安装与运维脚本、配置和文档。部署方案支持中文界面、注册、文件管理和分享，文档中的示例为共享 10 GiB 存储池。",
+    "features": [
+      "通过邮箱和密码注册、图片验证码及用户登录使用网盘。",
+      "上传和下载文件或文件夹，并使用分享、回收站及基础在线预览。",
+      "普通用户管理自己的文件，管理员可从专门入口管理全站文件。",
+      "在线编辑不超过 2 MiB 的 UTF-8 文本文件。",
+      "部署材料包含 HTTPS 配置、独立系统用户、数据库账号和备份工具。"
+    ],
+    "getting_started": [
+      "先阅读完整部署说明，确认目标环境为 Ubuntu 24.04、Linux x86_64，且具备要求的 MySQL、Nginx 与 HTTPS 条件。",
+      "按部署说明核对安装脚本的配置及容量安排，再在自己的服务器上初始化。",
+      "初始化时仅通过本机或 SSH 隧道访问；完成管理员初始化后再配置公网入口。"
+    ],
+    "notes": [
+      "仓库提供部署脚本与配置，不包含 Cloudreve 本体源码或二进制文件。",
+      "文档示例的 10 GiB 是所有用户共用的文件系统容量，并非每人独享；实际容量由部署者配置。",
+      "未接入 SMTP 邮件服务，因此没有邮件验证和邮件找回密码；Office 转换、视频缩略图与离线下载组件也未配置。"
+    ],
+    "links": [
+      { "label": "下载部署包", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/releases" },
+      { "label": "完整部署说明", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/docs/DEPLOY.md" },
+      { "label": "验证范围", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/VALIDATION.md" }
+    ],
+    "sources": [
+      "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/README.md"
+    ],
+    "verified_on": "2026-11-05"
+  }
+}
