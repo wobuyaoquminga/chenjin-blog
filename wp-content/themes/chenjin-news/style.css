@@ -2,7 +2,7 @@
 Theme Name: Chenjin News
 Description: 陈今的个人博客，专注文章和项目。
 Author: 陈今
-Version: 3.1.1
+Version: 3.2.0
 Template: blocksy
 Requires at least: 6.7
 Requires PHP: 7.4
@@ -122,9 +122,9 @@ body:not(.cjn-ready) .cjn-header-actions { display: none; }
 
 /* Content-first homepage. */
 .cjn-home { position: relative; }
-.cjn-hero { position: relative; display: block; padding-block: 38px 0; border-bottom: 1px solid var(--cjn-line); }
-.cjn-hero-content { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.cjn-hero h1 { margin: 0; font-size: clamp(2rem, 3.2vw, 3rem); line-height: 1.2; font-weight: 750; letter-spacing: -.04em; }
+.cjn-hero.cjn-shell { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; width: 100%; margin: 0; padding: 0; border-bottom: 1px solid var(--cjn-line); }
+.cjn-hero-content { position: relative; z-index: 2; display: flex; align-items: center; min-width: 0; padding-inline: clamp(28px, 4.2vw, 90px) 24px; }
+.cjn-hero h1 { margin: 0; font-size: clamp(3rem, 5.4vw, 5.8rem); line-height: 1.2; font-weight: 750; letter-spacing: -.04em; }
 .cjn-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 0; }
 .cjn-home .cjn-section { padding-top: 52px; }
 .cjn-home .cjn-section-heading { margin-bottom: 24px; }
@@ -133,16 +133,19 @@ body:not(.cjn-ready) .cjn-header-actions { display: none; }
 .cjn-home .cjn-article-section { padding-bottom: 72px; }
 
 /* Local WebGL solar system; ordinary blog content remains usable independently. */
-.cjn-solar { position: relative; margin-top: 25px; border-radius: 20px; overflow: hidden; background: #05070b; isolation: isolate; }
-.cjn-solar-viewport { position: relative; width: 100%; height: clamp(460px, 66vh, 720px); outline-offset: -4px !important; }
+.cjn-solar { position: relative; min-width: 0; margin: 0; border-radius: 0; overflow: hidden; background: #05070b; isolation: isolate; }
+.cjn-solar-viewport { position: relative; width: 100%; height: max(500px, calc(100svh - 78px)); outline-offset: -4px !important; }
 .cjn-solar-viewport canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 .cjn-solar-viewport canvas:active { cursor: grabbing; }
 .cjn-solar-fallback { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .cjn-solar-fallback img { width: min(100%, 1000px); height: auto; mask-image: radial-gradient(ellipse closest-side, #000 65%, transparent 100%); }
 .cjn-solar[data-solar-state="ready"] .cjn-solar-fallback { display: none; }
 .cjn-solar[data-solar-state="failed"] .cjn-solar-viewport canvas { display: none; }
-@media (max-width: 700px) {
-  .cjn-solar { margin-inline: -10px; border-radius: 12px; }
+@media (max-width: 900px) {
+  .cjn-hero.cjn-shell { grid-template-columns: minmax(0, 1fr); }
+  .cjn-hero-content { padding: 38px 24px 28px; }
+  .cjn-hero h1 { font-size: clamp(2.5rem, 7vw, 4rem); }
+  .cjn-solar { margin: 0; border-radius: 0; }
   .cjn-solar-viewport { height: 460px; }
 }
 
@@ -296,8 +299,6 @@ body.cjn-motion [data-reveal] { transition-property: opacity, transform, border-
   .cjn-header-actions { margin-left: auto; }
 }
 @media (max-width: 700px) {
-  .cjn-hero { padding-top: 32px; padding-bottom: 0; }
-  .cjn-hero-content { flex-direction: column; align-items: flex-start; gap: 22px; }
   .cjn-section-heading { align-items: start; flex-direction: column; margin-bottom: 30px; }
   .cjn-section-link { margin-top: 5px; }
   body .ws-project-grid, .home .entries { grid-template-columns: minmax(0, 1fr) !important; }
