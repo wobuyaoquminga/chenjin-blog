@@ -18,7 +18,7 @@ $projects_url = home_url( '/projects/' );
         <div class="cjn-hero-content">
         <h1 id="cjn-hero-title" data-reveal><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
         </div>
-        <section id="solar-system" class="cjn-solar" data-solar-system aria-label="三维太阳系运行模型" aria-description="行星贴图：Solar System Scope，CC BY 4.0；天体位置由 Astronomy Engine 按当前 UTC 计算，尺寸与距离经压缩显示。">
+        <section id="solar-system" class="cjn-solar" data-solar-system aria-label="三维太阳系运行模型" aria-description="行星贴图：Solar System Scope，CC BY 4.0；各天体以不同的固定速度自转和公转，尺寸、距离与速度用于演示。">
             <div class="cjn-solar-viewport" tabindex="0" aria-label="拖动旋转三维太阳系，滚轮或双指缩放"></div>
             <div class="cjn-solar-fallback">
                 <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/saturn-cassini.jpg' ); ?>" width="1536" height="785" alt="土星 — NASA/JPL/Space Science Institute">

@@ -18,9 +18,5 @@ Based on NASA data with artistic adjustments and inferred terrain; these are tex
 
 Three.js 0.187.0: https://github.com/mrdoob/three.js/tree/r187 , MIT license in `vendor/THREE-LICENSE.txt`.
 Build files are upstream distributions; OrbitControls imports the local Three.js module instead of a bare package name.
-Planet radii and orbital distances are compressed for readability. Angular positions follow current UTC ephemerides.
-
-Astronomy Engine 2.1.19: https://github.com/cosinekitty/astronomy/tree/v2.1.19 , MIT license in `vendor/astronomy.LICENSE.txt`.
-Local VSOP87/NOVAS computation provides heliocentric J2000 ecliptic coordinates; this is not a live JPL API feed.
-Reference vectors from NASA/JPL Horizons are recorded with query parameters in `tests/fixtures/solar-horizons-20261109.json` in the source repository.
-Rotation axes and spin use computed values; alignment of texture longitude is approximate.
+Planet radii, distances, and rotation/orbit periods are chosen for a clearly visible fixed-speed demonstration.
+This model does not compute astronomical ephemerides or current sky positions.

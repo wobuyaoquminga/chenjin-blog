@@ -1,6 +1,6 @@
 import * as THREE from './assets/vendor/three.module.js';
 import { OrbitControls } from './assets/vendor/OrbitControls.js';
-import { getSolarEphemeris, getPlanetPosition, ORBITAL_PERIOD_DAYS, EPHEMERIS_SOURCE } from './ephemeris.js';
+import { DEMO_BODIES, demoPose } from './solar-motion.js';
 
 const root = document.querySelector('[data-solar-system]');
 
@@ -138,29 +138,13 @@ function startSolarSystem(section) {
   scene.add(halo);
   objects.push(haloTexture, haloMaterial);
 
-  // The ephemeris supplies real 3D directions and eccentricity. Each body's
-  // distance has a fixed display scale; spheres are enlarged for readability.
-  const planets = [
-    { key: 'mercury', label: '水星', a: 8.2, au: .3871, size: .44 },
-    { key: 'venus', label: '金星', a: 11.4, au: .7233, size: .74 },
-    { key: 'earth', label: '地球', a: 15.2, au: 1, size: .80 },
-    { key: 'mars', label: '火星', a: 19.6, au: 1.5237, size: .59 },
-    { key: 'jupiter', label: '木星', a: 28, au: 5.2028, size: 2.08 },
-    { key: 'saturn', label: '土星', a: 39, au: 9.537, size: 1.71 },
-    { key: 'uranus', label: '天王星', a: 50, au: 19.191, size: 1.28 },
-    { key: 'neptune', label: '海王星', a: 60, au: 30.069, size: 1.23 },
-  ];
+  const planets = DEMO_BODIES;
 
-  function eclipticToScene(vector, scale, target) {
-    return target.set(vector.x * scale, vector.z * scale, -vector.y * scale);
-  }
-
-  const referenceTime = Date.now();
   for (const body of planets) {
     const points = [];
     for (let step = 0; step < 128; step++) {
-      const sampleTime = referenceTime + (step / 128 - .5) * ORBITAL_PERIOD_DAYS[body.key] * 86400000;
-      points.push(eclipticToScene(getPlanetPosition(body.key, new Date(sampleTime)), body.a / body.au, new THREE.Vector3()));
+      const pose = demoPose(body, step / 128 * body.orbit);
+      points.push(new THREE.Vector3(pose.x, pose.y, pose.z));
     }
     const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points);
     const orbitMaterial = new THREE.LineBasicMaterial({ color: 0x66748c, transparent: true, opacity: .29, depthWrite: false });
@@ -169,6 +153,7 @@ function startSolarSystem(section) {
 
     const position = new THREE.Group();
     const axis = new THREE.Group();
+    axis.rotation.z = body.tilt;
     position.add(axis);
     scene.add(position);
     const material = new THREE.MeshStandardMaterial({ map: textures[body.key], roughness: 1, metalness: 0 });
@@ -237,7 +222,6 @@ function startSolarSystem(section) {
   const tempPoint = new THREE.Vector3();
   const sunward = new THREE.Vector3();
   const sideways = new THREE.Vector3();
-  const poleVector = new THREE.Vector3();
   const up = new THREE.Vector3(0, 1, 0);
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
@@ -250,11 +234,10 @@ function startSolarSystem(section) {
   let frameCount = 0;
   let previousFrameTime = 0;
   let lastFrameAt = performance.now();
-  let lastEphemerisAt = 0;
   let guided = true;
   let lastInteractionAt = performance.now() - 6000;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const startedAt = Date.now();
+  const startedAt = performance.now();
 
   function overviewDistance() {
     const vertical = THREE.MathUtils.degToRad(camera.fov);
@@ -318,23 +301,19 @@ function startSolarSystem(section) {
     drawOnce();
   }
 
-  function updateEphemeris() {
-    const now = new Date();
-    const ephemeris = getSolarEphemeris(now);
-    for (const item of orbiters) {
-      const { body, position, axis, mesh, moon } = item;
-      const data = ephemeris.planets[body.key];
-      eclipticToScene(data, body.a / body.au, position.position);
-      eclipticToScene(data.pole, 1, poleVector).normalize();
-      axis.quaternion.setFromUnitVectors(up, poleVector);
-      mesh.rotation.y = THREE.MathUtils.degToRad(data.spinDeg);
-      if (moon) eclipticToScene(ephemeris.moonEarth, 1.75 / .00257, moon.position);
+  function updateMotion(seconds) {
+    for (const { body, position, mesh, moon } of orbiters) {
+      const pose = demoPose(body, seconds);
+      position.position.set(pose.x, pose.y, pose.z);
+      mesh.rotation.y = pose.spinAngle;
+      if (moon) {
+        const angle = seconds * Math.PI * 2 / 8;
+        moon.position.set(Math.cos(angle) * 1.75, Math.sin(angle) * .12, Math.sin(angle) * 1.75);
+        moon.rotation.y = angle;
+      }
     }
-    eclipticToScene(ephemeris.sun.pole, 1, poleVector).normalize();
-    sunAxis.quaternion.setFromUnitVectors(up, poleVector);
-    sun.rotation.y = THREE.MathUtils.degToRad(ephemeris.sun.spinDeg);
-    section.dataset.solarUtc = String(ephemeris.utc || now.toISOString());
-    lastEphemerisAt = Date.now();
+    sunAxis.rotation.z = .126;
+    sun.rotation.y = seconds * Math.PI * 2 / 12;
   }
 
   function updateRunState() {
@@ -373,7 +352,7 @@ function startSolarSystem(section) {
       const delta = previousFrameTime ? Math.min((time - previousFrameTime) / 1000, .05) : 0;
       previousFrameTime = time;
       lastFrameAt = performance.now();
-      if (Date.now() - lastEphemerisAt >= 1000) updateEphemeris();
+      updateMotion((time - startedAt) / 1000);
       if (selected) {
         const target = byKey.get(selected);
         target.mesh.getWorldPosition(tempPoint);
@@ -404,7 +383,7 @@ function startSolarSystem(section) {
       frameCount++;
       if (frameCount % 10 === 0) {
         section.dataset.solarFrames = String(frameCount);
-        section.dataset.solarTime = ((Date.now() - startedAt) / 1000).toFixed(2);
+        section.dataset.solarTime = ((time - startedAt) / 1000).toFixed(2);
       }
       frameId = requestAnimationFrame(animate);
       updateRunState();
@@ -415,9 +394,7 @@ function startSolarSystem(section) {
     if (disposed || failed || document.hidden || contextLost || frameId) return;
     previousFrameTime = 0;
     lastFrameAt = performance.now();
-    if (Date.now() - lastEphemerisAt >= 1000) {
-      try { updateEphemeris(); } catch (_) { failScene(); return; }
-    }
+    updateMotion((performance.now() - startedAt) / 1000);
     frameId = requestAnimationFrame(animate);
     updateRunState();
   }
@@ -473,7 +450,7 @@ function startSolarSystem(section) {
   // Render the geometry immediately, then replace each one-pixel material map
   // with its locally hosted image as that image finishes loading.
   viewport.append(canvas);
-  updateEphemeris();
+  updateMotion(0);
   resetView();
   lastInteractionAt = performance.now() - 6000;
   resize();
@@ -482,7 +459,7 @@ function startSolarSystem(section) {
   controls.update(0);
   if (!drawOnce()) return;
   section.dataset.solarState = 'ready';
-  section.dataset.solarSource = EPHEMERIS_SOURCE;
+  section.dataset.solarSource = 'fixed-speed-demo';
   section.dataset.solarBodies = '太阳,水星,金星,地球,火星,木星,土星,天王星,海王星';
   section.dataset.solarFrames = '1';
   section.dataset.solarTime = '0.00';

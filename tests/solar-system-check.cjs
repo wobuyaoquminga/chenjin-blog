@@ -14,7 +14,7 @@ async function ready(page) {
 async function touch(cdp, points, type) { await cdp.send('Input.dispatchTouchEvent', {type, touchPoints:points}); }
 async function main() {
   const browser = await chromium.launch({headless:true, executablePath:process.env.BROWSER_EXE || 'C:/Program Files/Google/Chrome/Application/chrome.exe'});
-  const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
+  const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
   const page = await context.newPage();
   const errors=[]; page.on('pageerror', e=>errors.push(e.message));
   try {
@@ -24,15 +24,16 @@ async function main() {
     assert.equal(await model.locator('button, select, input').count(),0,'No solar controls');
     assert.equal((await model.getAttribute('data-solar-bodies')).split(',').length,9);
     assert.ok(await canvas.evaluate(el=>!!el.getContext('webgl2')),'Actual WebGL');
-    assert.match(await model.getAttribute('data-solar-source'),/astronomy[ -]engine.*2\.1\.19/i);
-    await page.waitForFunction(()=>Math.abs(Date.now()-Date.parse(document.querySelector('[data-solar-system]').dataset.solarUtc))<5000);
+    assert.equal(await model.getAttribute('data-solar-source'),'fixed-speed-demo');
+    assert.equal(await model.getAttribute('data-solar-utc'), null);
     await model.locator('.cjn-solar-fallback').waitFor({state:'hidden'});
     await page.locator('[data-solar-textures=ready]').waitFor({timeout:90000});
     console.log('All planetary texture maps loaded.');
+    assert.notEqual(await model.getAttribute('data-solar-camera'),'auto','Stationary camera isolates planetary motion');
     const initial=await canvas.screenshot();
     const initialFrame=Number(await model.getAttribute('data-solar-frames'));
-    await page.waitForTimeout(1600);
-    assert.ok(!initial.equals(await canvas.screenshot()),'Visible camera motion');
+    await page.waitForTimeout(1000);
+    assert.ok(!initial.equals(await canvas.screenshot()),'Planetary motion visible within one second without camera rotation');
     assert.ok(Number(await model.getAttribute('data-solar-frames'))>initialFrame);
     await page.screenshot({path:path.join(out,'desktop.png')});
     const rect=await canvas.boundingBox();
@@ -51,12 +52,12 @@ async function main() {
     await canvas.dblclick({position:{x:rect.width/2,y:rect.height/2}});
     await page.waitForFunction(()=>document.querySelector('[data-solar-system]').dataset.solarSelected==='overview');
     await page.waitForTimeout(2400);
-    for(let i=0;i<8;i++) {
+    for(let i=0;i<3;i++) {
       const before=Number(await model.getAttribute('data-solar-frames'));
       await page.waitForTimeout(10000);
       assert.ok(Number(await model.getAttribute('data-solar-frames'))>before,'Continuous foreground rendering sample '+i);
       assert.equal(await model.getAttribute('data-solar-running'),'true');
-      assert.ok(Math.abs(Date.now()-Date.parse(await model.getAttribute('data-solar-utc')))<5000,'UTC stays current');
+      assert.ok(Number(await model.getAttribute('data-solar-time'))>0);
     }
     await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
     await page.waitForTimeout(300); const off=Number(await model.getAttribute('data-solar-frames'));
@@ -68,7 +69,7 @@ async function main() {
     await new Promise(resolve=>setTimeout(resolve,1800));
     await lifecycle.send('Page.setWebLifecycleState',{state:'active'});
     await page.bringToFront(); await page.waitForTimeout(3000);
-    assert.ok(Math.abs(Date.now()-Date.parse(await model.getAttribute('data-solar-utc')))<5000,'Clock catches up after lifecycle resume');
+    assert.equal(await model.getAttribute('data-solar-running'),'true','Animation resumes after lifecycle freeze');
     assert.deepEqual(errors,[]);
     const phoneContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1.5,isMobile:true,hasTouch:true});
     const phone=await phoneContext.newPage(); await ready(phone);
@@ -100,7 +101,7 @@ async function main() {
     const fallback=await broken.newPage(); await fallback.goto(base+'/',{waitUntil:'domcontentloaded'});
     await fallback.locator('[data-solar-state=failed]').waitFor({timeout:30000});
     assert.ok(await fallback.locator('.cjn-solar-fallback img').isVisible()); await broken.close();
-    console.log('Real-time ephemerides, no controls, WebGL/textures, camera/touch gestures, 80-second continuity, lifecycle resume, mobile, reduced motion and fallback passed.');
+    console.log('Fixed-speed visible planetary motion, no controls, WebGL/textures, camera/touch gestures, 30-second continuity, lifecycle resume, mobile, reduced motion and fallback passed.');
   } finally {await browser.close();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

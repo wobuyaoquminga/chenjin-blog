@@ -28,8 +28,8 @@ jobs:
           node --check tests/dynamic-theme-check.cjs
           node --check tests/contact-check.cjs
           node --check tests/service-worker-check.cjs
-      - name: Ephemeris reference checks
-        run: node tests/ephemeris-check.cjs
+      - name: Fixed motion checks
+        run: node tests/solar-motion-check.cjs
       - name: Solar system bundle reproducibility
         run: |
           npx --yes esbuild@0.28.2 wp-content/themes/chenjin-news/solar-system.js --bundle --format=esm --minify --legal-comments=linked --outfile=wp-content/themes/chenjin-news/solar-system.min.js
