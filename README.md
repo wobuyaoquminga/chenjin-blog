@@ -29,14 +29,14 @@
 - **私密联系**：访客填写昵称、主题和正文，无需邮箱；管理员在「站内来信」查看和删除。来信不进入公开搜索、RSS 或 REST API。
 - **管理与运维**：中文后台、评论审核、可自定义导航和 Logo；服务器部署方案包含独立 PHP-FPM、定时任务、登录重试限制与数据库/文件备份。
 
-当前仅保留 `chenjin-news` 子主题（版本 3.1.0）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.5、联系插件 1.0.0。
+当前仅保留 `chenjin-news` 子主题（版本 3.1.1）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.5、联系插件 1.0.0。
 
 ## 下载
 
 从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件：
 
-- `chenjin-blog-3.1.0.zip`：完整源码、部署脚本、文档和截图。
-- `chenjin-news-3.1.0.zip`：可通过 WordPress 后台上传的子主题。
+- `chenjin-blog-3.1.1.zip`：完整源码、部署脚本、文档和截图。
+- `chenjin-news-3.1.1.zip`：可通过 WordPress 后台上传的子主题。
 - `chenjin-github-1.1.5.zip`：GitHub 公开项目同步与详情插件。
 - `chenjin-contact-1.0.0.zip`：站内联系插件。
 - `SHA256SUMS.txt`：上述文件的 SHA-256 校验值。

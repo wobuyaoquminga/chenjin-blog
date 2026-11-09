@@ -114,19 +114,14 @@
       observer = new IntersectionObserver(entries => {
         try {
           entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
-              observer.unobserve(entry.target);
-            }
+            entry.target.classList.toggle('is-visible', entry.isIntersecting);
           });
         } catch (_) {
           showAll();
         }
       }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
       body.classList.add('cjn-motion');
-      revealItems.forEach(item => {
-        if (!item.classList.contains('is-visible')) observer.observe(item);
-      });
+      revealItems.forEach(item => observer.observe(item));
     } catch (_) {
       showAll();
     }
@@ -141,7 +136,7 @@
   });
   addEventListener('pageshow', event => {
     scheduleScroll();
-    if (event.persisted) showAll();
+    if (event.persisted) startReveals();
   });
   startReveals();
 })();
