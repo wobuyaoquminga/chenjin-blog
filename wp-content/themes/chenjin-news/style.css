@@ -2,7 +2,7 @@
 Theme Name: Chenjin News
 Description: 陈今的个人博客，专注文章和项目。
 Author: 陈今
-Version: 2.0.1
+Version: 3.0.0
 Template: blocksy
 Requires at least: 6.7
 Requires PHP: 7.4
@@ -122,18 +122,29 @@ body:not(.cjn-ready) .cjn-header-actions { display: none; }
 
 /* Content-first homepage. */
 .cjn-home { position: relative; }
-.cjn-hero { position: relative; display: grid; grid-template-columns: .85fr 1.4fr; align-items: center; min-height: 560px; padding-block: 70px; border-bottom: 1px solid var(--cjn-line); }
-.cjn-hero-content { position: relative; z-index: 2; }
-.cjn-planet { display: block; min-width: 0; margin-inline: -35px -28px; mask-image: radial-gradient(ellipse closest-side at center, #000 68%, transparent 100%); transform: translate(var(--planet-x, 0px), var(--planet-y, 0px)) rotate(-15deg); transition: transform 1.1s cubic-bezier(.2,.7,.2,1); }
-.cjn-planet-photo { display: block; width: 100%; height: auto; animation: cjn-planet-drift 14s ease-in-out infinite alternate; }
-@keyframes cjn-planet-drift { from { transform: translateY(-12px) scale(1); } to { transform: translateY(12px) scale(1.035); } }
-.cjn-hero h1 { margin: 0; font-size: clamp(2.6rem, 4.2vw, 4.3rem); line-height: 1.2; font-weight: 750; letter-spacing: -.04em; }
-.cjn-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.cjn-hero { position: relative; display: block; padding-block: 38px 0; border-bottom: 1px solid var(--cjn-line); }
+.cjn-hero-content { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.cjn-hero h1 { margin: 0; font-size: clamp(2rem, 3.2vw, 3rem); line-height: 1.2; font-weight: 750; letter-spacing: -.04em; }
+.cjn-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 0; }
 .cjn-home .cjn-section { padding-top: 52px; }
 .cjn-home .cjn-section-heading { margin-bottom: 24px; }
 .cjn-home .cjn-section-heading h2 { margin: 0; font-size: 2rem; line-height: 1.3; letter-spacing: -.02em; }
 .cjn-home .ws-project-release, .cjn-home .ws-projects-meta, .cjn-home .ws-project-facts, .cjn-home .ws-project-repository, .cjn-home .ws-project-links { display: none; }
 .cjn-home .cjn-article-section { padding-bottom: 72px; }
+
+/* Local WebGL solar system; ordinary blog content remains usable independently. */
+.cjn-solar { position: relative; margin-top: 25px; border-radius: 20px; overflow: hidden; background: #05070b; isolation: isolate; }
+.cjn-solar-viewport { position: relative; width: 100%; height: clamp(460px, 66vh, 720px); outline-offset: -4px !important; }
+.cjn-solar-viewport canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.cjn-solar-viewport canvas:active { cursor: grabbing; }
+.cjn-solar-fallback { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.cjn-solar-fallback img { width: min(100%, 1000px); height: auto; mask-image: radial-gradient(ellipse closest-side, #000 65%, transparent 100%); }
+.cjn-solar[data-solar-state="ready"] .cjn-solar-fallback { display: none; }
+.cjn-solar[data-solar-state="failed"] .cjn-solar-viewport canvas { display: none; }
+@media (max-width: 700px) {
+  .cjn-solar { margin-inline: -10px; border-radius: 12px; }
+  .cjn-solar-viewport { height: 460px; }
+}
 
 /* Real project data is rendered by the GitHub shortcode. */
 .ws-projects { color: var(--cjn-text); }
@@ -285,8 +296,8 @@ body.cjn-motion [data-reveal] { transition-property: opacity, transform, border-
   .cjn-header-actions { margin-left: auto; }
 }
 @media (max-width: 700px) {
-  .cjn-hero { grid-template-columns: 1fr; min-height: 0; padding-top: 46px; padding-bottom: 36px; gap: 24px; }
-  .cjn-planet { margin: 12px -12px 0; }
+  .cjn-hero { padding-top: 32px; padding-bottom: 0; }
+  .cjn-hero-content { flex-direction: column; align-items: flex-start; gap: 22px; }
   .cjn-section-heading { align-items: start; flex-direction: column; margin-bottom: 30px; }
   .cjn-section-link { margin-top: 5px; }
   body .ws-project-grid, .home .entries { grid-template-columns: minmax(0, 1fr) !important; }
@@ -312,7 +323,5 @@ body.cjn-motion [data-reveal] { transition-property: opacity, transform, border-
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   body.cjn-motion [data-reveal] { opacity: 1 !important; transform: none !important; }
-  .cjn-planet-photo { animation: none !important; }
-  .cjn-planet { transform: rotate(-15deg) !important; }
   .ws-project-card, .entries .entry-card, .entry-card, .cjn-cta, .cjn-cta-secondary { transform: none !important; }
 }

@@ -12,20 +12,6 @@
   const revealItems = [...document.querySelectorAll('[data-reveal]')];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = matchMedia('(max-width: 900px)');
-  const hero = document.querySelector('.cjn-hero');
-  const planet = document.querySelector('.cjn-planet');
-  if (hero && planet) {
-    hero.addEventListener('pointermove', event => {
-      if (reduceMotion.matches || event.pointerType !== 'mouse') return;
-      const bounds = hero.getBoundingClientRect();
-      planet.style.setProperty('--planet-x', `${((event.clientX - bounds.left) / bounds.width - .5) * 38}px`);
-      planet.style.setProperty('--planet-y', `${((event.clientY - bounds.top) / bounds.height - .5) * 26}px`);
-    }, { passive: true });
-    hero.addEventListener('pointerleave', () => {
-      planet.style.removeProperty('--planet-x');
-      planet.style.removeProperty('--planet-y');
-    });
-  }
   let scrollFrame = 0;
   let observer;
   body.classList.add('cjn-ready');

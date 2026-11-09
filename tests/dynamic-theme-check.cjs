@@ -38,14 +38,7 @@ async function main() {
     assert.equal(await page.locator('h1').count(), 1);
     assert.equal(await page.locator('.cjn-orbit, .cjn-kicker, .cjn-marquee, .cjn-section-index, .cjn-outro').count(), 0);
     assert.equal(await page.locator('.cjn-hero p').count(), 0, 'No auxiliary hero copy');
-    await page.locator('.cjn-planet-photo').evaluate(img => img.decode());
-    assert.ok(await page.locator('.cjn-planet-photo').evaluate(img => img.naturalWidth >= 1500), 'Real Cassini photo loaded');
-    const before = await page.locator('.cjn-planet-photo').evaluate(el => getComputedStyle(el).transform);
-    await page.waitForTimeout(500);
-    assert.notEqual(await page.locator('.cjn-planet-photo').evaluate(el => getComputedStyle(el).transform), before, 'Planet visibly animates');
-    await page.mouse.move(1100, 350);
-    assert.notEqual(await page.locator('.cjn-planet').evaluate(el => el.style.getPropertyValue('--planet-x')), '', 'Pointer parallax responds');
-    await page.mouse.move(0, 0);
+    await page.locator('[data-solar-system][data-solar-state=ready]').waitFor({timeout:60000});
     await capture('home-desktop.png');
     await page.locator('[data-cjn-search]').click();
     assert.equal(await page.locator('[data-cjn-search]').getAttribute('aria-expanded'), 'true');
@@ -78,7 +71,8 @@ async function main() {
     await visit('/contact/');
     const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } });
     const reducedPage = await reduced.newPage();
-    await reducedPage.goto(base + '/', { waitUntil: 'networkidle' });
+    await reducedPage.goto(base + '/', { waitUntil: 'domcontentloaded' });
+    await reducedPage.locator('[data-solar-state=ready]').waitFor({timeout:90000});
     assert.equal(await reducedPage.locator('body').evaluate(el => el.classList.contains('cjn-motion')), false);
     assert.equal(await reducedPage.evaluate(() => document.getAnimations().filter(a => a.effect.getTiming().iterations === Infinity).length), 0, 'Reduced motion should stop endless decoration');
     await reduced.close();

@@ -1,0 +1,106 @@
+'use strict';
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const fs = require('node:fs');
+const os = require('node:os');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(os.homedir(), 'AppData/Roaming/npm/node_modules/@playwright/mcp/node_modules/playwright'));
+const base = (process.env.BLOG_URL || 'https://nixiang.me/blog').replace(/\/$/, '');
+const out = path.resolve(__dirname, '../.cache/solar-system');
+fs.mkdirSync(out, { recursive: true });
+async function ready(page) {
+  await page.goto(base + '/', {waitUntil:'domcontentloaded'});
+  await page.locator('[data-solar-state=ready]').waitFor({timeout:90000});
+}
+async function touch(cdp, points, type) { await cdp.send('Input.dispatchTouchEvent', {type, touchPoints:points}); }
+async function main() {
+  const browser = await chromium.launch({headless:true, executablePath:process.env.BROWSER_EXE || 'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+  const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
+  const page = await context.newPage();
+  const errors=[]; page.on('pageerror', e=>errors.push(e.message));
+  try {
+    const started=Date.now(); await ready(page);
+    console.log('First interactive frame: '+(Date.now()-started)+' ms');
+    const model=page.locator('[data-solar-system]'), canvas=model.locator('canvas');
+    assert.equal(await model.locator('button, select, input').count(),0,'No solar controls');
+    assert.equal((await model.getAttribute('data-solar-bodies')).split(',').length,9);
+    assert.ok(await canvas.evaluate(el=>!!el.getContext('webgl2')),'Actual WebGL');
+    assert.match(await model.getAttribute('data-solar-source'),/astronomy[ -]engine.*2\.1\.19/i);
+    await page.waitForFunction(()=>Math.abs(Date.now()-Date.parse(document.querySelector('[data-solar-system]').dataset.solarUtc))<5000);
+    await model.locator('.cjn-solar-fallback').waitFor({state:'hidden'});
+    await page.locator('[data-solar-textures=ready]').waitFor({timeout:90000});
+    console.log('All planetary texture maps loaded.');
+    const initial=await canvas.screenshot();
+    const initialFrame=Number(await model.getAttribute('data-solar-frames'));
+    await page.waitForTimeout(1600);
+    assert.ok(!initial.equals(await canvas.screenshot()),'Visible camera motion');
+    assert.ok(Number(await model.getAttribute('data-solar-frames'))>initialFrame);
+    await page.screenshot({path:path.join(out,'desktop.png')});
+    const rect=await canvas.boundingBox();
+    await page.mouse.move(rect.x+rect.width*.6,rect.y+rect.height*.5);
+    await page.mouse.down();
+    await page.mouse.move(rect.x+rect.width*.8,rect.y+rect.height*.4,{steps:12});
+    await page.mouse.up(); await page.waitForTimeout(400);
+    assert.equal(await model.getAttribute('data-solar-camera'),'manual');
+    const drag=await canvas.screenshot();
+    await page.mouse.wheel(0,-300); await page.waitForTimeout(500);
+    assert.ok(!drag.equals(await canvas.screenshot()),'Wheel zoom');
+    await canvas.focus(); await page.keyboard.press('Escape'); await page.waitForTimeout(2200);
+    await canvas.click({position:{x:rect.width/2,y:rect.height/2}});
+    await page.waitForFunction(()=>document.querySelector('[data-solar-system]').dataset.solarSelected==='sun');
+    await page.waitForTimeout(2000); await model.screenshot({path:path.join(out,'sun-realtime.png')});
+    await canvas.dblclick({position:{x:rect.width/2,y:rect.height/2}});
+    await page.waitForFunction(()=>document.querySelector('[data-solar-system]').dataset.solarSelected==='overview');
+    await page.waitForTimeout(2400);
+    for(let i=0;i<8;i++) {
+      const before=Number(await model.getAttribute('data-solar-frames'));
+      await page.waitForTimeout(10000);
+      assert.ok(Number(await model.getAttribute('data-solar-frames'))>before,'Continuous foreground rendering sample '+i);
+      assert.equal(await model.getAttribute('data-solar-running'),'true');
+      assert.ok(Math.abs(Date.now()-Date.parse(await model.getAttribute('data-solar-utc')))<5000,'UTC stays current');
+    }
+    await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
+    await page.waitForTimeout(300); const off=Number(await model.getAttribute('data-solar-frames'));
+    await page.waitForTimeout(800);
+    assert.ok(Number(await model.getAttribute('data-solar-frames'))>off,'Scrolling away cannot latch a pause');
+    await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+    const lifecycle=await context.newCDPSession(page);
+    await lifecycle.send('Page.setWebLifecycleState',{state:'frozen'});
+    await new Promise(resolve=>setTimeout(resolve,1800));
+    await lifecycle.send('Page.setWebLifecycleState',{state:'active'});
+    await page.bringToFront(); await page.waitForTimeout(3000);
+    assert.ok(Math.abs(Date.now()-Date.parse(await model.getAttribute('data-solar-utc')))<5000,'Clock catches up after lifecycle resume');
+    assert.deepEqual(errors,[]);
+    const phoneContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1.5,isMobile:true,hasTouch:true});
+    const phone=await phoneContext.newPage(); await ready(phone);
+    const mobile=phone.locator('[data-solar-system]'), mobileCanvas=mobile.locator('canvas');
+    assert.equal(await mobile.locator('button,select,input').count(),0);
+    assert.ok(await phone.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    const box=await mobileCanvas.boundingBox(), cdp=await phoneContext.newCDPSession(phone);
+    const x=box.x+box.width/2,y=box.y+box.height/2;
+    await touch(cdp,[{x,y}],'touchStart');
+    for(let n=1;n<=8;n++) await touch(cdp,[{x:x+n*9,y:y-n*3}],'touchMove');
+    await touch(cdp,[],'touchEnd');
+    assert.equal(await mobile.getAttribute('data-solar-camera'),'manual','Touch rotates');
+    const beforePinch=await mobileCanvas.screenshot();
+    await touch(cdp,[{x:x-20,y},{x:x+20,y}],'touchStart');
+    for(let n=1;n<=8;n++) await touch(cdp,[{x:x-20-n*6,y},{x:x+20+n*6,y}],'touchMove');
+    await touch(cdp,[],'touchEnd'); await phone.waitForTimeout(500);
+    assert.ok(!beforePinch.equals(await mobileCanvas.screenshot()),'Pinch zoom');
+    await phone.reload({waitUntil:'domcontentloaded'});
+    await phone.locator('[data-solar-state=ready][data-solar-textures=ready]').waitFor({timeout:90000});
+    await phone.screenshot({path:path.join(out,'mobile.png')});
+    await phone.setViewportSize({width:320,height:720}); await phone.waitForTimeout(500);
+    assert.ok(await phone.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    await phoneContext.close();
+    const reduced=await browser.newContext({reducedMotion:'reduce'}), quiet=await reduced.newPage(); await ready(quiet);
+    assert.notEqual(await quiet.locator('[data-solar-system]').getAttribute('data-solar-camera'),'auto','Reduced motion disables automatic camera');
+    await reduced.close();
+    const broken=await browser.newContext();
+    await broken.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl')?null:original.call(this,type,...args);};});
+    const fallback=await broken.newPage(); await fallback.goto(base+'/',{waitUntil:'domcontentloaded'});
+    await fallback.locator('[data-solar-state=failed]').waitFor({timeout:30000});
+    assert.ok(await fallback.locator('.cjn-solar-fallback img').isVisible()); await broken.close();
+    console.log('Real-time ephemerides, no controls, WebGL/textures, camera/touch gestures, 80-second continuity, lifecycle resume, mobile, reduced motion and fallback passed.');
+  } finally {await browser.close();}
+}
+main().catch(e=>{console.error(e);process.exitCode=1;});

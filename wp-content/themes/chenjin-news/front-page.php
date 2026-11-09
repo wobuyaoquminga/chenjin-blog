@@ -17,14 +17,13 @@ $projects_url = home_url( '/projects/' );
     <section class="cjn-hero cjn-shell" aria-labelledby="cjn-hero-title">
         <div class="cjn-hero-content">
         <h1 id="cjn-hero-title" data-reveal><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
-        <div class="cjn-hero-actions" data-reveal>
-            <a class="cjn-cta" href="<?php echo esc_url( $projects_url ); ?>">项目资源 <span aria-hidden="true">↗</span></a>
-            <a class="cjn-cta-secondary" href="<?php echo esc_url( $articles_url ); ?>">文章 <span aria-hidden="true">→</span></a>
         </div>
-        </div>
-        <a class="cjn-planet" href="https://science.nasa.gov/photojournal/the-greatest-saturn-portrait-yet/" target="_blank" rel="noopener noreferrer" title="NASA/JPL/Space Science Institute">
-            <img class="cjn-planet-photo" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/saturn-cassini.jpg' ); ?>" width="1536" height="785" fetchpriority="high" decoding="async" alt="卡西尼探测器拍摄的土星 — NASA/JPL/Space Science Institute">
-        </a>
+        <section id="solar-system" class="cjn-solar" data-solar-system aria-label="三维太阳系运行模型" aria-description="行星贴图：Solar System Scope，CC BY 4.0；天体位置由 Astronomy Engine 按当前 UTC 计算，尺寸与距离经压缩显示。">
+            <div class="cjn-solar-viewport" tabindex="0" aria-label="拖动旋转三维太阳系，滚轮或双指缩放"></div>
+            <div class="cjn-solar-fallback">
+                <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/saturn-cassini.jpg' ); ?>" width="1536" height="785" alt="土星 — NASA/JPL/Space Science Institute">
+            </div>
+        </section>
     </section>
 
     <section id="featured-projects" class="cjn-section cjn-project-section cjn-shell" aria-labelledby="cjn-project-title">

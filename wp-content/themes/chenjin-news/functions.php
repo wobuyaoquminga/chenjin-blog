@@ -15,10 +15,19 @@ add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
     wp_enqueue_style( 'chenjin-news', get_stylesheet_uri(), array( 'ct-main-styles' ), $version . '.' . filemtime( get_stylesheet_directory() . '/style.css' ) );
     wp_enqueue_script( 'chenjin-news-motion', get_stylesheet_directory_uri() . '/motion.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/motion.js' ), true );
+    if ( is_front_page() ) {
+        wp_enqueue_script( 'chenjin-solar-system', get_stylesheet_directory_uri() . '/solar-system.min.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/solar-system.min.js' ), true );
+    }
     if ( is_singular( 'post' ) ) {
         wp_enqueue_script( 'chenjin-news-reading', get_stylesheet_directory_uri() . '/reading.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/reading.js' ), true );
     }
 }, 20 );
+
+add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+    if ( 'chenjin-solar-system' !== $handle ) { return $tag; }
+    $tag = preg_replace( '/\s+type=([\'\"]).*?\1/', '', $tag );
+    return str_replace( '<script ', '<script type="module" ', $tag );
+}, 10, 2 );
 
 function chenjin_news_navigation() {
     echo '<ul class="cjn-nav-list">';
