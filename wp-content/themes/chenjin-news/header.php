@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 <body <?php body_class(); ?> <?php echo blocksy_body_attr(); ?>>
 <?php wp_body_open(); ?>
 <a class="skip-link screen-reader-text" href="#main">跳转到正文</a>
-<div class="cjn-ambient" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="cjn-progress" aria-hidden="true"><span></span></div>
 <div id="main-container">
     <?php do_action( 'blocksy:header:before' ); ?>
@@ -25,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
                     $logo = (int) get_theme_mod( 'custom_logo' );
                     echo $logo ? wp_get_attachment_image( $logo, 'thumbnail', false, array( 'alt' => '' ) ) : '今';
                 ?></span>
-                <span class="cjn-brand-name">陈今<span>CHENJIN</span></span>
+                <span class="cjn-brand-name">陈今</span>
             </a>
             <nav id="cjn-nav" class="cjn-nav" aria-label="主导航">
                 <?php wp_nav_menu( array(

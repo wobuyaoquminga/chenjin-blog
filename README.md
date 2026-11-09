@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/wobuyaoquminga/chenjin-blog)](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
 
-基于 WordPress 的中文个人博客，包含暗色动态子主题、GitHub 公开项目目录和无需邮箱的私密联系表单。适合在个人博客中同时发布文章、展示开源作品和提供项目下载入口。
+基于 WordPress 的中文个人博客，包含冷蓝色暗调玻璃卡片、GitHub 公开项目目录和无需邮箱的私密联系表单。首页使用卡西尼号拍摄的土星照片，以 CSS 漂浮缩放和指针视差呈现动态效果；项目与文章内容直接展示。
 
 [在线演示](https://nixiang.me/blog/) · [项目资源页](https://nixiang.me/blog/projects/) · [下载最新版本](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) · [报告问题](https://github.com/wobuyaoquminga/chenjin-blog/issues)
 
@@ -19,7 +19,7 @@
 
 ## 功能
 
-整体视觉更新为黑曜石暗色与荧光绿，首页使用 CSS 3D 轨道 Hero，并提供滚动渐显、轻视差、阅读进度和支持时的原生页面过渡。手机导航与搜索支持键盘操作；减少动态效果偏好和无 JavaScript 环境下仍可阅读。交互由主题 CSS/JavaScript 在浏览器中运行，无需构建工具。
+首页直接展示项目和文章，不放置介绍口号、英文标签或辅助装饰文字。项目卡片使用精简摘要，展开后保留完整详情；页面保留滚动渐显、阅读进度和页面切换，并支持手机导航、键盘操作与减少动态效果。
 
 
 - **文章与阅读**：使用 WordPress 原生文章、分类、标签、草稿、修订、定时发布、媒体、搜索、分页和 RSS；子主题提供文章目录、代码复制及桌面/手机布局。
@@ -27,15 +27,15 @@
 - **私密联系**：访客填写昵称、主题和正文，无需邮箱；管理员在「站内来信」查看和删除。来信不进入公开搜索、RSS 或 REST API。
 - **管理与运维**：中文后台、评论审核、可自定义导航和 Logo；服务器部署方案包含独立 PHP-FPM、定时任务、登录重试限制与数据库/文件备份。
 
-当前仅保留 `chenjin-news` 子主题（版本 2.0.0）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.1、联系插件 1.0.0。
+当前仅保留 `chenjin-news` 子主题（版本 2.0.1）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.3、联系插件 1.0.0。
 
 ## 下载
 
 从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件：
 
-- `chenjin-blog-2.0.0.zip`：完整源码、部署脚本、文档和截图。
-- `chenjin-news-2.0.0.zip`：可通过 WordPress 后台上传的子主题。
-- `chenjin-github-1.1.1.zip`：GitHub 公开项目同步与详情插件。
+- `chenjin-blog-2.0.1.zip`：完整源码、部署脚本、文档和截图。
+- `chenjin-news-2.0.1.zip`：可通过 WordPress 后台上传的子主题。
+- `chenjin-github-1.1.3.zip`：GitHub 公开项目同步与详情插件。
 - `chenjin-contact-1.0.0.zip`：站内联系插件。
 - `SHA256SUMS.txt`：上述文件的 SHA-256 校验值。
 
@@ -114,6 +114,6 @@ docs/                              文档与截图
 
 ## 许可证与反馈
 
-本仓库自定义代码以 [GPL-2.0-or-later](LICENSE) 发布，上游组件保留各自许可证。文章和各项目下载资源适用其自身声明。
+本仓库自定义代码以 [GPL-2.0-or-later](LICENSE) 发布，上游组件保留各自许可证。土星照片来自 NASA 卡西尼任务，署名及使用说明见[第三方来源](THIRD-PARTY.md)；该图片不属于本仓库的 GPL 代码授权范围。文章和各项目下载资源适用其自身声明。
 
 功能问题请提交 [Issue](https://github.com/wobuyaoquminga/chenjin-blog/issues/new/choose)，修复欢迎提交 Pull Request。安全问题或私密联系请使用 [站内联系](https://nixiang.me/blog/contact/)，不要在公开仓库提交个人资料、密码、Cookie、私钥或数据库。

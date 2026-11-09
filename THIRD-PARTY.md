@@ -3,6 +3,7 @@
 - [WordPress](https://github.com/WordPress/WordPress)：成熟博客/CMS 内核，GPL-2.0-or-later，官方发布包通过 WordPress 官方下载渠道安装；部署基线 7.1.2。
 - [Blocksy](https://wordpress.org/themes/blocksy/)：`chenjin-news` 新闻风格子主题所依赖的父主题，从 WordPress 官方主题目录安装并开启官方更新；许可证以官方主题包声明为准。
 - [Blocksy News](https://creativethemes.com/blocksy/starter-site/news/)：所选的外观参考；使用父主题的原生文章卡片配置布局，未导入演示文章、第三方表单或图库。
+- [卡西尼号土星照片 PIA06193](https://science.nasa.gov/photojournal/the-greatest-saturn-portrait-yet/)：`wp-content/themes/chenjin-news/assets/saturn-cassini.jpg` 基于 NASA 提供的 1536 像素图像制作，非 AI 绘制。图片署名：NASA/JPL/Space Science Institute。媒体使用遵循 [JPL 图像使用政策](https://www.jpl.nasa.gov/jpl-image-use-policy/)；本站不表示 NASA、JPL 或加州理工学院认可或支持本项目。此图片不适用本仓库自定义代码的 GPL 许可证。
 - [WP-CLI](https://github.com/wp-cli/wp-cli)：WordPress 命令行工具，MIT；部署基线 2.12.0，安装使用官方发布物及 SHA-256 校验。
 - [Slim SEO](https://wordpress.org/plugins/slim-seo/)：SEO 元信息与 sitemap，由 WordPress 官方插件目录安装，许可以插件包声明为准。
 - [Limit Login Attempts Reloaded](https://wordpress.org/plugins/limit-login-attempts-reloaded/)：登录重试限制，由 WordPress 官方插件目录安装，许可以插件包声明为准。

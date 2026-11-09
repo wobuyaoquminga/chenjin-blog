@@ -29,27 +29,11 @@ function chenjin_news_navigation() {
 }
 
 function chenjin_news_intro() {
-    $front = ! empty( $GLOBALS['chenjin_news_front'] );
-    ?>
-    <div class="chenjin-news-intro">
-        <p class="chenjin-news-label">陈今 · 个人博客</p>
-        <h1><?php echo $front ? '记录开发，分享创作。' : '文章与记录'; ?></h1>
-        <p>技术笔记、开源项目，以及值得留下的想法。</p>
-        <a href="<?php echo esc_url( home_url( '/projects/' ) ); ?>">浏览全部开源项目与资源 <span aria-hidden="true">→</span></a>
-    </div>
-    <?php
+    echo '<header class="chenjin-news-intro"><h1>文章</h1></header>';
 }
 add_action( 'blocksy:archive:top', function () {
     if ( is_home() ) { chenjin_news_intro(); }
 } );
-
-// Decorative local covers for posts without an uploaded featured image.
-add_filter( 'post_thumbnail_html', function ( $html, $post_id ) {
-    if ( $html || ( is_singular() && empty( $GLOBALS['chenjin_news_front'] ) ) ) { return $html; }
-    $slug = get_post_field( 'post_name', $post_id );
-    $cover = in_array( $slug, array( 'diandian-counter', 'chatapp-secure' ), true ) ? $slug : 'journal';
-    return '<a class="chenjin-news-cover" href="' . esc_url( get_permalink( $post_id ) ) . '" aria-label="' . esc_attr( get_the_title( $post_id ) ) . '"><img src="' . esc_url( get_stylesheet_directory_uri() . '/assets/' . $cover . '.svg' ) . '" alt="" width="960" height="540" loading="lazy"></a>';
-}, 10, 2 );
 
 add_filter( 'blocksy:footer:copyright:value', function () {
     $number = get_option( 'chenjin_icp_number', '' );

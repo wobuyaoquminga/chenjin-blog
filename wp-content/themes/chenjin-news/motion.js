@@ -10,12 +10,22 @@
   const search = document.getElementById('cjn-search');
   document.querySelectorAll('.ws-project-card, .entries .entry-card').forEach(item => item.setAttribute('data-reveal', ''));
   const revealItems = [...document.querySelectorAll('[data-reveal]')];
-  const tiltItems = [...document.querySelectorAll('[data-tilt], .ws-project-card, .entry-card')];
-  const magneticItems = [...document.querySelectorAll('[data-magnetic]')];
-  const orbit = document.querySelector('.cjn-orbit');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const mobile = matchMedia('(max-width: 900px)');
+  const hero = document.querySelector('.cjn-hero');
+  const planet = document.querySelector('.cjn-planet');
+  if (hero && planet) {
+    hero.addEventListener('pointermove', event => {
+      if (reduceMotion.matches || event.pointerType !== 'mouse') return;
+      const bounds = hero.getBoundingClientRect();
+      planet.style.setProperty('--planet-x', `${((event.clientX - bounds.left) / bounds.width - .5) * 38}px`);
+      planet.style.setProperty('--planet-y', `${((event.clientY - bounds.top) / bounds.height - .5) * 26}px`);
+    }, { passive: true });
+    hero.addEventListener('pointerleave', () => {
+      planet.style.removeProperty('--planet-x');
+      planet.style.removeProperty('--planet-y');
+    });
+  }
   let scrollFrame = 0;
   let observer;
   body.classList.add('cjn-ready');
@@ -136,91 +146,12 @@
     }
   }
 
-  function resetPointer() {
-    tiltItems.forEach(item => {
-      item.style.setProperty('--tilt-x', '0deg');
-      item.style.setProperty('--tilt-y', '0deg');
-    });
-    magneticItems.forEach(item => {
-      item.style.setProperty('--magnet-x', '0px');
-      item.style.setProperty('--magnet-y', '0px');
-    });
-    if (orbit) {
-      orbit.style.setProperty('--pointer-x', '0deg');
-      orbit.style.setProperty('--pointer-y', '0deg');
-    }
-  }
-
-  function attachPointer(items, onMove, onLeave) {
-    items.forEach(item => {
-      let frame = 0;
-      let lastEvent;
-      item.addEventListener('pointermove', event => {
-        if (reduceMotion.matches || !finePointer.matches || event.pointerType === 'touch') return;
-        lastEvent = event;
-        if (!frame) frame = requestAnimationFrame(() => {
-          frame = 0;
-          if (!reduceMotion.matches && finePointer.matches) onMove(item, lastEvent);
-        });
-      }, { passive: true });
-      item.addEventListener('pointerleave', () => {
-        if (frame) cancelAnimationFrame(frame);
-        frame = 0;
-        onLeave(item);
-      });
-    });
-  }
-
-  function position(event, item) {
-    const rect = item.getBoundingClientRect();
-    return {
-      x: (event.clientX - rect.left) / rect.width - 0.5,
-      y: (event.clientY - rect.top) / rect.height - 0.5
-    };
-  }
-
-  attachPointer(tiltItems, (item, event) => {
-    if (item.querySelector('details[open]')) {
-      item.style.setProperty('--tilt-x', '0deg');
-      item.style.setProperty('--tilt-y', '0deg');
-      return;
-    }
-    const { x, y } = position(event, item);
-    item.style.setProperty('--tilt-x', `${(-y * 8).toFixed(2)}deg`);
-    item.style.setProperty('--tilt-y', `${(x * 8).toFixed(2)}deg`);
-  }, item => {
-    item.style.setProperty('--tilt-x', '0deg');
-    item.style.setProperty('--tilt-y', '0deg');
-  });
-
-  attachPointer(magneticItems, (item, event) => {
-    const { x, y } = position(event, item);
-    item.style.setProperty('--magnet-x', `${(x * 12).toFixed(2)}px`);
-    item.style.setProperty('--magnet-y', `${(y * 12).toFixed(2)}px`);
-  }, item => {
-    item.style.setProperty('--magnet-x', '0px');
-    item.style.setProperty('--magnet-y', '0px');
-  });
-
-  if (orbit) attachPointer([orbit], (item, event) => {
-    const { x, y } = position(event, item);
-    item.style.setProperty('--pointer-x', `${(-y * 8).toFixed(2)}deg`);
-    item.style.setProperty('--pointer-y', `${(x * 8).toFixed(2)}deg`);
-  }, item => {
-    item.style.setProperty('--pointer-x', '0deg');
-    item.style.setProperty('--pointer-y', '0deg');
-  });
-
   reduceMotion.addEventListener('change', () => {
     if (reduceMotion.matches) {
-      resetPointer();
       showAll();
     } else {
       startReveals();
     }
-  });
-  finePointer.addEventListener('change', () => {
-    if (!finePointer.matches) resetPointer();
   });
   addEventListener('pageshow', event => {
     scheduleScroll();

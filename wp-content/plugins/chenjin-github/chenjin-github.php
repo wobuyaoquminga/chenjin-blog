@@ -2,7 +2,7 @@
 /**
  * Plugin Name: 陈今的 GitHub 项目
  * Description: 定时同步公开 GitHub 项目，并用短代码展示。
- * Version: 1.1.1
+ * Version: 1.1.3
  * License: GPL-2.0-or-later
  * Text Domain: chenjin-github
  */

@@ -36,14 +36,17 @@ async function main() {
   try {
     await visit('/');
     assert.equal(await page.locator('h1').count(), 1);
-    assert.ok(await page.locator('.cjn-orbit').isVisible());
-    assert.ok(await page.locator('[data-magnetic]').count() >= 1);
+    assert.equal(await page.locator('.cjn-orbit, .cjn-kicker, .cjn-marquee, .cjn-section-index, .cjn-outro').count(), 0);
+    assert.equal(await page.locator('.cjn-hero p').count(), 0, 'No auxiliary hero copy');
+    await page.locator('.cjn-planet-photo').evaluate(img => img.decode());
+    assert.ok(await page.locator('.cjn-planet-photo').evaluate(img => img.naturalWidth >= 1500), 'Real Cassini photo loaded');
+    const before = await page.locator('.cjn-planet-photo').evaluate(el => getComputedStyle(el).transform);
+    await page.waitForTimeout(500);
+    assert.notEqual(await page.locator('.cjn-planet-photo').evaluate(el => getComputedStyle(el).transform), before, 'Planet visibly animates');
+    await page.mouse.move(1100, 350);
+    assert.notEqual(await page.locator('.cjn-planet').evaluate(el => el.style.getPropertyValue('--planet-x')), '', 'Pointer parallax responds');
+    await page.mouse.move(0, 0);
     await capture('home-desktop.png');
-    assert.ok(await page.evaluate(() => document.getAnimations().some(a => a.effect.getTiming().iterations === Infinity)), 'Hero animation running');
-    await page.locator('.cjn-orbit').hover({ position: { x: 80, y: 80 } });
-    await page.waitForFunction(() => parseFloat(document.querySelector('.cjn-orbit').style.getPropertyValue('--pointer-x')) !== 0 && document.querySelector('.cjn-orbit').style.getPropertyValue('--pointer-x') !== '');
-    await page.locator('[data-magnetic]').first().hover({ position: { x: 15, y: 15 } });
-    await page.waitForFunction(() => parseFloat(document.querySelector('[data-magnetic]').style.getPropertyValue('--magnet-x')) !== 0 && document.querySelector('[data-magnetic]').style.getPropertyValue('--magnet-x') !== '');
     await page.locator('[data-cjn-search]').click();
     assert.equal(await page.locator('[data-cjn-search]').getAttribute('aria-expanded'), 'true');
     await page.locator('#cjn-search input[type=search]').fill('计数');
