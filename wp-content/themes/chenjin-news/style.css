@@ -2,7 +2,7 @@
 Theme Name: Chenjin News
 Description: 陈今的个人博客，专注文章和项目。
 Author: 陈今
-Version: 3.2.0
+Version: 3.3.0
 Template: blocksy
 Requires at least: 6.7
 Requires PHP: 7.4
@@ -122,9 +122,13 @@ body:not(.cjn-ready) .cjn-header-actions { display: none; }
 
 /* Content-first homepage. */
 .cjn-home { position: relative; }
-.cjn-hero.cjn-shell { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; width: 100%; margin: 0; padding: 0; border-bottom: 1px solid var(--cjn-line); }
+.cjn-hero.cjn-shell { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; width: 100%; margin: 0; padding: 0; border-bottom: 1px solid var(--cjn-line); background: radial-gradient(ellipse at 47% 48%, rgba(68, 95, 126, .15), transparent 60%), linear-gradient(105deg, #080a0d 8%, #0a1019 46%, #050a13 70%, #02040b 100%); }
 .cjn-hero-content { position: relative; z-index: 2; display: flex; align-items: center; min-width: 0; padding-inline: clamp(28px, 4.2vw, 90px) 24px; }
-.cjn-hero h1 { margin: 0; font-size: clamp(3rem, 5.4vw, 5.8rem); line-height: 1.2; font-weight: 750; letter-spacing: -.04em; }
+.cjn-hero h1 { margin: 0; max-width: 100%; line-height: 1.15; font-weight: 500; }
+.cjn-title-name { display: block; padding-block: .08em; font-family: 'KaiTi', 'STKaiti', 'Songti SC', 'Noto Serif SC', serif; font-size: clamp(6.2rem, 11vw, 11rem); font-weight: 500; letter-spacing: .08em; color: #e5edf4; background: linear-gradient(110deg, #fff9e9 0%, #dce6ed 24%, #8eb9d6 45%, #f2f5f6 63%, #d8e3ed 100%); background-size: 240% 100%; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: cjn-title-float 7s ease-in-out infinite alternate, cjn-title-light 11s ease-in-out infinite alternate; }
+.cjn-title-rest { display: block; margin-top: 20px; padding-left: .15em; color: #b4c3d1; font-size: clamp(1.6rem, 2.7vw, 2.8rem); font-weight: 400; letter-spacing: .38em; animation: cjn-title-float 8s ease-in-out -2s infinite alternate; }
+@keyframes cjn-title-float { from { transform: translateY(5px); } to { transform: translateY(-6px); } }
+@keyframes cjn-title-light { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 .cjn-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 0; }
 .cjn-home .cjn-section { padding-top: 52px; }
 .cjn-home .cjn-section-heading { margin-bottom: 24px; }
@@ -133,7 +137,7 @@ body:not(.cjn-ready) .cjn-header-actions { display: none; }
 .cjn-home .cjn-article-section { padding-bottom: 72px; }
 
 /* Local WebGL solar system; ordinary blog content remains usable independently. */
-.cjn-solar { position: relative; min-width: 0; margin: 0; border-radius: 0; overflow: hidden; background: #05070b; isolation: isolate; }
+.cjn-solar { position: relative; min-width: 0; margin: 0; border-radius: 0; overflow: hidden; background: transparent; isolation: isolate; }
 .cjn-solar-viewport { position: relative; width: 100%; height: max(500px, calc(100svh - 78px)); outline-offset: -4px !important; }
 .cjn-solar-viewport canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 .cjn-solar-viewport canvas:active { cursor: grabbing; }

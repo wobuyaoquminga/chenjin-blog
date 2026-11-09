@@ -16,7 +16,14 @@ $projects_url = home_url( '/projects/' );
 <div class="cjn-home">
     <section class="cjn-hero cjn-shell" aria-labelledby="cjn-hero-title">
         <div class="cjn-hero-content">
-        <h1 id="cjn-hero-title" data-reveal><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
+        <h1 id="cjn-hero-title" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" data-reveal>
+            <?php if ( '陈今的博客' === get_bloginfo( 'name' ) ) : ?>
+                <span class="cjn-title-name" aria-hidden="true">陈今</span>
+                <span class="cjn-title-rest" aria-hidden="true">的博客</span>
+            <?php else : ?>
+                <span class="cjn-title-name"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
+            <?php endif; ?>
+        </h1>
         </div>
         <section id="solar-system" class="cjn-solar" data-solar-system aria-label="三维太阳系运行模型" aria-description="行星贴图：Solar System Scope，CC BY 4.0；各天体以不同的固定速度自转和公转，尺寸、距离与速度用于演示。">
             <div class="cjn-solar-viewport" tabindex="0" aria-label="拖动旋转三维太阳系，滚轮或双指缩放"></div>

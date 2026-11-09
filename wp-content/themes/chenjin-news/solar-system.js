@@ -22,12 +22,12 @@ function startSolarSystem(section) {
   canvas.setAttribute('aria-hidden', 'true');
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, matchMedia('(max-width: 700px)').matches ? 1.5 : 1.75));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.65;
-    renderer.setClearColor(0x02040b, 1);
+    renderer.setClearColor(0x02040b, 0);
   } catch (error) {
     canvas.remove();
     section.dataset.solarState = 'failed';
@@ -36,7 +36,7 @@ function startSolarSystem(section) {
   }
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x02040b);
+  scene.background = null;
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1800);
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
