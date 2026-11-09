@@ -29,6 +29,8 @@ async function main() {
       assert.ok(await page.locator('.entry-card').count() >= 2);
       const columns = await page.locator('.entries').evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length);
       assert.equal(columns, 2, 'News desktop grid');
+      for (const cover of await page.locator('.chenjin-news-cover img').all()) await cover.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => [...document.querySelectorAll('.chenjin-news-cover img')].every(image => image.complete));
       assert.equal(await page.locator('.chenjin-news-cover img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'News covers');
     }
     await page.screenshot({ path: path.join(out, 'home-desktop.png'), fullPage: true });
@@ -83,7 +85,7 @@ async function main() {
       await page.goto(base + '/wp-login.php', { waitUntil: 'domcontentloaded' });
       await page.locator('#user_login').fill('chenjin');
       await page.locator('#user_pass').fill(password);
-      await Promise.all([page.waitForURL('**/wp-admin/**'), page.locator('#wp-submit').click()]);
+      await Promise.all([page.waitForURL('**/wp-admin/**', { waitUntil: 'domcontentloaded' }), page.locator('#wp-submit').click()]);
       assert.match(page.url(), /wp-admin/);
       await page.goto(base + '/wp-admin/post-new.php', { waitUntil: 'domcontentloaded' });
       await page.waitForFunction(() => window.wp?.apiFetch);

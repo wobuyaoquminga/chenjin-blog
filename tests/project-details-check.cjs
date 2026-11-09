@@ -27,7 +27,7 @@ async function main() {
       assert.match(text, /仓库信息/);
       assert.match(text, /许可证/);
       assert.match(text, /文档与版本/);
-      assert.match(text, /2026-11-05/);
+      assert.ok(text.includes(profile.verified_on), name + ' review date');
       assert.ok(await card.locator('.ws-project-documentation a').count() >= 2);
       if (name === 'chenjin-blog') await page.screenshot({ path: path.join(output, 'desktop.png'), fullPage: true });
       const downloads = card.locator('.ws-project-downloads');

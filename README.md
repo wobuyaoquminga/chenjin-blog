@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/wobuyaoquminga/chenjin-blog)](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
 
-基于 WordPress 的中文个人博客，包含 News 风格子主题、GitHub 公开项目目录和无需邮箱的私密联系表单。适合在个人博客中同时发布文章、展示开源作品和提供项目下载入口。
+基于 WordPress 的中文个人博客，包含暗色动态子主题、GitHub 公开项目目录和无需邮箱的私密联系表单。适合在个人博客中同时发布文章、展示开源作品和提供项目下载入口。
 
 [在线演示](https://nixiang.me/blog/) · [项目资源页](https://nixiang.me/blog/projects/) · [下载最新版本](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) · [报告问题](https://github.com/wobuyaoquminga/chenjin-blog/issues)
 
@@ -19,20 +19,23 @@
 
 ## 功能
 
+整体视觉更新为黑曜石暗色与荧光绿，首页使用 CSS 3D 轨道 Hero，并提供滚动渐显、轻视差、阅读进度和支持时的原生页面过渡。手机导航与搜索支持键盘操作；减少动态效果偏好和无 JavaScript 环境下仍可阅读。交互由主题 CSS/JavaScript 在浏览器中运行，无需构建工具。
+
+
 - **文章与阅读**：使用 WordPress 原生文章、分类、标签、草稿、修订、定时发布、媒体、搜索、分页和 RSS；子主题提供文章目录、代码复制及桌面/手机布局。
 - **项目与下载**：分页读取 GitHub 公开仓库，包含 Fork 与归档项目；支持搜索、语言筛选、排序、README、源码、Issues、最新 Release 和附件下载。项目卡片可展开功能介绍、使用步骤、许可证、技术标签和部署文档；同步失败保留最近成功的缓存。
 - **私密联系**：访客填写昵称、主题和正文，无需邮箱；管理员在「站内来信」查看和删除。来信不进入公开搜索、RSS 或 REST API。
 - **管理与运维**：中文后台、评论审核、可自定义导航和 Logo；服务器部署方案包含独立 PHP-FPM、定时任务、登录重试限制与数据库/文件备份。
 
-当前仅保留 `chenjin-news` 子主题和它所依赖的官方 Blocksy 父主题。
+当前仅保留 `chenjin-news` 子主题（版本 2.0.0）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.1、联系插件 1.0.0。
 
 ## 下载
 
 从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件：
 
-- `chenjin-blog-1.2.0.zip`：完整源码、部署脚本、文档和截图。
-- `chenjin-news-1.1.1.zip`：可通过 WordPress 后台上传的子主题。
-- `chenjin-github-1.1.0.zip`：GitHub 公开项目同步与详情插件。
+- `chenjin-blog-2.0.0.zip`：完整源码、部署脚本、文档和截图。
+- `chenjin-news-2.0.0.zip`：可通过 WordPress 后台上传的子主题。
+- `chenjin-github-1.1.1.zip`：GitHub 公开项目同步与详情插件。
 - `chenjin-contact-1.0.0.zip`：站内联系插件。
 - `SHA256SUMS.txt`：上述文件的 SHA-256 校验值。
 
@@ -46,9 +49,9 @@
 2. 上传并启用 News 子主题以及两个插件。
 3. 创建首页与文章列表页，在「设置 → 阅读」指定静态首页和文章页。
 4. 创建项目页和联系页，分别添加 `[ws_projects]` 与 `[chenjin_contact]` 短代码。
-5. 在「设置 → GitHub 项目」点击「立即同步」，在「外观」配置菜单和文章卡片布局。
+5. 在「设置 → GitHub 项目」点击「立即同步」，菜单通过 WordPress 菜单位置配置；首页内容来自真实文章与公开项目数据。
 
-当前同步账号默认为演示站点的 `wobuyaoquminga`。部署自己的项目目录时，需要修改插件中的 `WS_GITHUB_USER` 常量，然后重新同步；当前版本尚未提供后台账号切换选项。完整步骤、页面路径和 News 布局初始化见 [安装指南](docs/INSTALLATION.md)。
+当前同步账号默认为演示站点的 `wobuyaoquminga`。部署自己的项目目录时，需要修改插件中的 `WS_GITHUB_USER` 常量，然后重新同步；当前版本尚未提供后台账号切换选项。完整步骤、页面路径和可选父主题卡片初始化见 [安装指南](docs/INSTALLATION.md)。
 
 **Ubuntu 服务器部署：**
 
@@ -103,7 +106,7 @@ docs/                              文档与截图
 
 ## 功能边界
 
-- 当前验证环境为 WordPress 7.1.2、Blocksy 2.1.58、PHP 8.3、MySQL 8 和 Nginx；其他版本需自行验证。
+- 当前验证环境为 WordPress 7.1.4、Blocksy 2.1.61、PHP 8.3、MySQL 8 和 Nginx；其他版本需自行验证。
 - GitHub API 使用匿名公开访问，存在请求额度与网络限制。下载链接指向原仓库，博客不复制托管项目安装包。
 - 联系表单是管理员私密收件箱，当前没有访客账号、站内双向聊天或邮件通知。
 - 服务器方案提供本地备份，异地备份和 SMTP 需自行配置；未做大流量压测或第三方安全认证。

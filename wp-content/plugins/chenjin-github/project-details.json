@@ -21,9 +21,18 @@
       "Android 应用被系统停止后没有消息或来电推送；本地密钥或应用数据丢失后无法从服务器恢复聊天历史。"
     ],
     "links": [
-      { "label": "下载与版本", "url": "https://github.com/wobuyaoquminga/chatapp-secure/releases" },
-      { "label": "部署说明", "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/deploy/ubuntu/README.md" },
-      { "label": "验证范围", "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/VALIDATION.md" }
+      {
+        "label": "下载与版本",
+        "url": "https://github.com/wobuyaoquminga/chatapp-secure/releases"
+      },
+      {
+        "label": "部署说明",
+        "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/deploy/ubuntu/README.md"
+      },
+      {
+        "label": "验证范围",
+        "url": "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/VALIDATION.md"
+      }
     ],
     "sources": [
       "https://github.com/wobuyaoquminga/chatapp-secure/blob/main/README.md"
@@ -32,9 +41,10 @@
   },
   "chenjin-blog": {
     "title": "陈今博客",
-    "summary": "基于 WordPress 的中文个人博客，提供 News 风格子主题、GitHub 公开项目目录和无需邮箱的站内联系表单。适合发布文章、展示开源项目并提供原仓库下载入口。",
+    "summary": "基于 WordPress 的中文动态博客，提供暗色动效主题、GitHub 公开项目目录和无需邮箱的站内联系。适合发布文章、展示开源作品和分享项目资源。",
     "features": [
       "使用 WordPress 的文章、分类、标签、草稿、修订、搜索和 RSS，子主题提供文章目录与代码复制。",
+      "首页提供三维轨道视觉、滚动渐显和轻视差；支持手机键盘导航、减少动态效果和无脚本阅读。",
       "同步 GitHub 公开仓库，项目页支持搜索、语言筛选、排序及源码和发布附件入口。",
       "访客可填写昵称、主题和正文向管理员发送站内来信，无需提供邮箱。",
       "提供中文后台、评论审核和导航、Logo 等站点外观配置。",
@@ -52,14 +62,23 @@
       "站内联系仅保存管理员可见来信，不提供邮件通知或双向聊天。"
     ],
     "links": [
-      { "label": "下载组件", "url": "https://github.com/wobuyaoquminga/chenjin-blog/releases/latest" },
-      { "label": "安装指南", "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/INSTALLATION.md" },
-      { "label": "部署与更新", "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/DEPLOYMENT.md" }
+      {
+        "label": "下载组件",
+        "url": "https://github.com/wobuyaoquminga/chenjin-blog/releases/latest"
+      },
+      {
+        "label": "安装指南",
+        "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/INSTALLATION.md"
+      },
+      {
+        "label": "部署与更新",
+        "url": "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/docs/DEPLOYMENT.md"
+      }
     ],
     "sources": [
       "https://github.com/wobuyaoquminga/chenjin-blog/blob/main/README.md"
     ],
-    "verified_on": "2026-11-05"
+    "verified_on": "2026-11-09"
   },
   "diandian-counter": {
     "title": "点点计数",
@@ -82,8 +101,14 @@
       "仓库记录的 APK 验证不包含真机安装及系统文件选择器导出的实测。"
     ],
     "links": [
-      { "label": "下载最新版", "url": "https://github.com/wobuyaoquminga/diandian-counter/releases/latest" },
-      { "label": "Android 说明", "url": "https://github.com/wobuyaoquminga/diandian-counter/blob/main/android/README.md" }
+      {
+        "label": "下载最新版",
+        "url": "https://github.com/wobuyaoquminga/diandian-counter/releases/latest"
+      },
+      {
+        "label": "Android 说明",
+        "url": "https://github.com/wobuyaoquminga/diandian-counter/blob/main/android/README.md"
+      }
     ],
     "sources": [
       "https://github.com/wobuyaoquminga/diandian-counter/blob/main/README.md"
@@ -111,9 +136,18 @@
       "未接入 SMTP 邮件服务，因此没有邮件验证和邮件找回密码；Office 转换、视频缩略图与离线下载组件也未配置。"
     ],
     "links": [
-      { "label": "下载部署包", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/releases" },
-      { "label": "完整部署说明", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/docs/DEPLOY.md" },
-      { "label": "验证范围", "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/VALIDATION.md" }
+      {
+        "label": "下载部署包",
+        "url": "https://github.com/wobuyaoquminga/my-cloud-drive/releases"
+      },
+      {
+        "label": "完整部署说明",
+        "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/docs/DEPLOY.md"
+      },
+      {
+        "label": "验证范围",
+        "url": "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/VALIDATION.md"
+      }
     ],
     "sources": [
       "https://github.com/wobuyaoquminga/my-cloud-drive/blob/main/README.md"

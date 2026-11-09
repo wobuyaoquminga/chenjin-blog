@@ -32,7 +32,7 @@ async function main() {
     await admin.goto(base + '/wp-login.php', { waitUntil: 'domcontentloaded' });
     await admin.locator('#user_login').fill('chenjin');
     await admin.locator('#user_pass').fill(password);
-    await Promise.all([admin.waitForURL('**/wp-admin/**'), admin.locator('#wp-submit').click()]);
+    await Promise.all([admin.waitForURL('**/wp-admin/**', { waitUntil: 'domcontentloaded' }), admin.locator('#wp-submit').click()]);
     await admin.goto(base + '/wp-admin/edit.php?post_type=chenjin_message', { waitUntil: 'domcontentloaded' });
     const row = admin.locator('tr[id^="post-"]').filter({ hasText: subject });
     assert.equal(await row.count(), 1);

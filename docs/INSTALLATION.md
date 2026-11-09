@@ -6,7 +6,7 @@
 
 从 [最新发布页](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 下载 News 子主题和两个插件 ZIP。父主题 Blocksy 从 WordPress 官方主题目录安装，不包含在本仓库发布包中。
 
-当前验证环境为 WordPress 7.1.2、Blocksy 2.1.58、PHP 8.3；子主题声明要求 WordPress 6.7+ 与 PHP 7.4+，声明最低要求不等于每种环境都已验收。
+当前验证环境为 WordPress 7.1.4、Blocksy 2.1.61、PHP 8.3；子主题声明要求 WordPress 6.7+ 与 PHP 7.4+，声明最低要求不等于每种环境都已验收。
 
 ## 2. 替换项目账号
 
@@ -43,9 +43,11 @@ const WS_GITHUB_USER = 'wobuyaoquminga';
 
 `projects`、`contact`、`articles`、`privacy` 路径用于子主题导航和联系表单跳转，修改路径需要同步调整主题/插件中的对应链接。联系短代码放在其他路径时也应保留 `/contact/` 页面作为提交结果入口。
 
-## 5. 配置 News 样式与导航
+## 5. 配置主题导航与可选文章卡片
 
-在「外观 → 自定义」调整站点名称、Logo 和博客文章卡片：网格、桌面两列、手机一列，特色图片在前，后面是分类/日期、标题、摘要和阅读链接。在「外观 → 菜单」创建导航并分配到桌面主导航与移动端菜单位置。
+站点名称在「设置 → 常规」维护，Logo 使用「外观 → 自定义」的站点标识。创建 WordPress 菜单并分配到 `menu_1` 主导航位置。黑曜石暗色皮肤、页头页脚及导航交互由子主题维护，部分 Blocksy 页头外观选项不会生效。
+
+已获批的备案号可在「设置 → 常规 → 网站备案号」填写，页脚会自动展示；发布包不包含演示站点的备案配置。
 
 有 WP-CLI 时，可在创建页面并启用子主题后运行一次：
 
@@ -53,9 +55,9 @@ const WS_GITHUB_USER = 'wobuyaoquminga';
 wp --path=/your/wordpress/path eval-file /path/to/chenjin-blog/deploy/configure-news.php
 ```
 
-该命令初始化 News 默认样式和导航，**会替换子主题当前菜单位置与相关外观设置**。它不创建页面和文章；初始化标记存在时再次运行会跳过。现有站点应在测试副本确认后执行，或直接在自定义器手动配置。
+该命令可初始化部分 Blocksy 文章卡片样式，**不会导入旧浅色模板，也不负责子主题整体皮肤或导航交互**。它不创建页面和文章；初始化标记存在时再次运行会跳过。
 
-演示品牌“陈今”、介绍文字和默认装饰封面来自子主题代码；复用时可在 `functions.php`、`assets/` 与站点设置中替换。不要修改 Blocksy 父主题文件。
+演示品牌“陈今”、介绍文字和默认装饰封面来自子主题代码；复用时可在 `header.php`、`front-page.php`、`footer.php`、`assets/` 与站点设置中替换。不要修改 Blocksy 父主题文件。
 
 ## 6. 同步与收件
 
