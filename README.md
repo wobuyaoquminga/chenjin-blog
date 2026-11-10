@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/wobuyaoquminga/chenjin-blog)](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
 
-基于 WordPress 的中文个人博客，包含冷蓝色暗调玻璃卡片、GitHub 公开项目目录和无需邮箱的私密联系表单。首页以 Three.js WebGL 展示太阳、八大行星和月球的三维太阳系；项目与文章内容直接展示。
+基于 WordPress 的中文个人博客。Muse 自包含 HTML 设计已接入全站：金色、冰蓝与紫色银河视觉，星尘、流星和光晕卡片；文章、项目及私密联系使用真实 WordPress 数据。首页以 WebGL 展示太阳与八大行星的三维场景。
 
 [在线演示](https://nixiang.me/blog/) · [项目资源页](https://nixiang.me/blog/projects/) · [下载最新版本](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) · [报告问题](https://github.com/wobuyaoquminga/chenjin-blog/issues)
 
@@ -19,25 +19,25 @@
 
 ## 功能
 
-首页直接展示项目和文章，不放置介绍口号、英文标签或辅助装饰文字。项目卡片使用精简摘要，展开后保留完整详情；页面保留滚动渐显、阅读进度和页面切换，并支持手机导航、键盘操作与减少动态效果。
+首页直接展示项目和文章，减少辅助文案。全站采用 Muse 银河视觉：星尘、流星、金色/冰蓝/紫色渐变与光晕卡片。项目卡片保留精简摘要和可展开详情；滚动渐显每次进入视口重新播放。手机导航、键盘操作与减少动态效果保留。
 
-- **三维太阳系**：桌面首屏左半屏显示带浮动流光的书写感标题，右半屏展示模型，连续渐变背景连接两侧；手机与平板上下排列。使用本地 Three.js 0.187.0 展示太阳、八大行星和月球的自转、绕转、土星环及昼夜明暗。固定演示速度保证 1 秒内可看出运动，外侧行星绕转逐渐放慢。可拖动旋转视角、滚轮或双指缩放；点击天体聚焦，双击或按 Esc 返回总览。场景没有操作按钮。运动周期仅用于视觉演示，不代表真实星历或天体物理周期；半径和轨道距离也经过压缩，比例不代表真实尺寸或距离。
+- **三维太阳系**：桌面首屏左右呈现标题与模型，以连续渐变衔接；手机和平板上下排列。首页仅展示太阳和八大行星，没有月球。场景使用程序生成的行星贴图、太阳着色器与日冕 Bloom、地球云层和大气、土星环及银河旋臂。天体按固定演示速度运动；可拖动旋转、滚轮或双指缩放、点击天体聚焦，双击或按 Esc 返回总览。模型没有操作按钮。演示并非实时星历，尺寸和距离不代表真实比例。
 
 
 - **文章与阅读**：使用 WordPress 原生文章、分类、标签、草稿、修订、定时发布、媒体、搜索、分页和 RSS；子主题提供文章目录、代码复制及桌面/手机布局。
-- **项目与下载**：分页读取 GitHub 公开仓库，包含 Fork 与归档项目；支持搜索、语言筛选、排序、README、源码、Issues、最新 Release 和附件下载。项目卡片可展开功能介绍、使用步骤、许可证、技术标签和部署文档；同步失败保留最近成功的缓存。
+- **项目与下载**：分页读取 GitHub 公开仓库，包含 Fork 与归档项目；支持搜索、语言筛选、排序、README、源码、Issues、最新 Release 和附件下载。项目卡片可展开简介，也可进入站内项目详情（例如 `/projects/?project=chenjin-blog`）；详情只读取已同步的合法公开仓库缓存。源码与 Release 下载仍指向原始 GitHub 仓库；同步失败保留最近成功的缓存。
 - **私密联系**：访客填写昵称、主题和正文，无需邮箱；管理员在「站内来信」查看和删除。来信不进入公开搜索、RSS 或 REST API。
 - **管理与运维**：中文后台、评论审核、可自定义导航和 Logo；服务器部署方案包含独立 PHP-FPM、定时任务、登录重试限制与数据库/文件备份。
 
-当前仅保留 `chenjin-news` 子主题（版本 3.3.0）和它所依赖的官方 Blocksy 父主题；GitHub 项目插件 1.1.5、联系插件 1.0.0。
+当前组件版本：`chenjin-news` 子主题 4.0.0（依赖官方 Blocksy 父主题）、GitHub 项目插件 1.2.0、联系插件 1.0.0。
 
 ## 下载
 
-从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件：
+发布后可从 [Releases](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 选择所需文件；发布状态以页面实际显示为准：
 
-- `chenjin-blog-3.3.0.zip`：完整源码、部署脚本、文档和截图。
-- `chenjin-news-3.3.0.zip`：可通过 WordPress 后台上传的子主题。
-- `chenjin-github-1.1.5.zip`：GitHub 公开项目同步与详情插件。
+- `chenjin-blog-4.0.0.zip`：完整源码、部署脚本、文档和截图。
+- `chenjin-news-4.0.0.zip`：可通过 WordPress 后台上传的子主题。
+- `chenjin-github-1.2.0.zip`：GitHub 公开项目同步与详情插件。
 - `chenjin-contact-1.0.0.zip`：站内联系插件。
 - `SHA256SUMS.txt`：上述文件的 SHA-256 校验值。
 
@@ -116,6 +116,6 @@ docs/                              文档与截图
 
 ## 许可证与反馈
 
-本仓库自定义代码以 [GPL-2.0-or-later](LICENSE) 发布，上游组件保留各自许可证。土星照片来自 NASA 卡西尼任务，署名及使用说明见[第三方来源](THIRD-PARTY.md)；该图片不属于本仓库的 GPL 代码授权范围。文章和各项目下载资源适用其自身声明。
+本仓库自定义代码以 [GPL-2.0-or-later](LICENSE) 发布，上游组件及素材保留各自许可证。Muse 设计来源于用户授权下载的自包含 HTML；来源不等于对其原始设计另行作许可声明。当前场景贴图由程序生成；仓库保留的历史 NASA/行星素材及本地字体、Three.js 授权说明见[第三方来源](THIRD-PARTY.md)。文章和各项目下载资源适用其自身声明。
 
 功能问题请提交 [Issue](https://github.com/wobuyaoquminga/chenjin-blog/issues/new/choose)，修复欢迎提交 Pull Request。安全问题或私密联系请使用 [站内联系](https://nixiang.me/blog/contact/)，不要在公开仓库提交个人资料、密码、Cookie、私钥或数据库。

@@ -8,7 +8,7 @@ const os = require('node:os');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(os.homedir(), 'AppData/Roaming/npm/node_modules/@playwright/mcp/node_modules/playwright'));
 const root = path.resolve(__dirname, '..');
 const base = (process.env.BLOG_URL || 'https://121.43.101.242/blog').replace(/\/$/, '');
-const out = path.join(root, 'docs/screenshots');
+const out = process.env.BLOG_SCREENSHOT_DIR || path.join(root, 'docs/screenshots');
 fs.mkdirSync(out, { recursive: true });
 async function main() {
   const browser = await chromium.launch({ executablePath: process.env.BROWSER_EXE || 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
@@ -26,12 +26,12 @@ async function main() {
     assert.match(await page.title(), /陈今/);
     assert.equal(await page.locator('h1').count(), 1);
     if (await page.locator('#chenjin-news-css').count()) {
-      assert.ok(await page.locator('.entry-card').count() >= 2);
-      const columns = await page.locator('.entries').evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length);
-      assert.equal(columns, 2, 'News desktop grid');
-      for (const cover of await page.locator('.chenjin-news-cover img').all()) await cover.scrollIntoViewIfNeeded();
-      await page.waitForFunction(() => [...document.querySelectorAll('.chenjin-news-cover img')].every(image => image.complete));
-      assert.equal(await page.locator('.chenjin-news-cover img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'News covers');
+      assert.ok(await page.locator('#latest-articles .card').count() >= 2);
+      const columns = await page.locator('#latest-articles .grid').evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length);
+      assert.equal(columns, 2, 'Article desktop grid');
+      for (const cover of await page.locator('#latest-articles .muse-card-cover img').all()) await cover.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => [...document.querySelectorAll('#latest-articles .muse-card-cover img')].every(image => image.complete));
+      assert.equal(await page.locator('#latest-articles .muse-card-cover img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'Article covers');
     }
     await page.screenshot({ path: path.join(out, 'home-desktop.png'), fullPage: true });
     await visit(base + '/projects/');
@@ -61,7 +61,7 @@ async function main() {
     const names = await page.locator('.ws-project-card').evaluateAll(cards => cards.map(c => c.dataset.name));
     assert.deepEqual(names, [...names].sort((a, b) => a.localeCompare(b)));
     await visit(base + '/articles/');
-    assert.ok(await page.locator('.entry-card').count() >= 2);
+    assert.ok(await page.locator('.muse-article-list .card').count() >= 2);
     await visit(base + '/?s=' + encodeURIComponent('计数'));
     assert.match(await page.locator('main').innerText(), /计数/);
     await visit(base + '/?s=definitely-no-article-9381');
@@ -103,7 +103,9 @@ async function main() {
         const visitor = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
         const guest = await visitor.newPage();
         await guest.goto(qa.link, { waitUntil: 'networkidle' });
-        assert.match(await guest.locator('.chenjin-news-toc').innerText(), /目录验收/);
+        assert.equal(await guest.locator('.post-body .muse-post-cover img').count(), 1, 'Featured media rendered in article');
+        assert.equal(await guest.locator('.post-body .muse-post-cover img').evaluate(image => image.complete && image.naturalWidth > 0), true, 'Featured media loaded');
+        assert.match(await guest.locator('#postToc').innerText(), /目录验收/);
         await guest.locator('.copy-code').click();
         assert.equal(await guest.evaluate(() => navigator.clipboard.readText()), 'const verified = true;');
         await guest.locator('#comment').fill('临时验收评论，检查后自动删除。');

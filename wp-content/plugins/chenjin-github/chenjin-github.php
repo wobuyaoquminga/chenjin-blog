@@ -2,7 +2,7 @@
 /**
  * Plugin Name: 陈今的 GitHub 项目
  * Description: 定时同步公开 GitHub 项目，并用短代码展示。
- * Version: 1.1.5
+ * Version: 1.2.0
  * License: GPL-2.0-or-later
  * Text Domain: chenjin-github
  */
@@ -194,11 +194,11 @@ function ws_github_render_details($repo, $profile, $base) {
     ?>
     <details class="ws-project-details">
       <summary>查看项目详情</summary>
-      <div class="ws-project-details-body">
+      <div class="ws-project-details-body prose">
         <?php foreach (array('features' => '核心功能', 'getting_started' => '开始使用', 'notes' => '使用说明') as $key => $heading) : ?>
           <?php if (!empty($profile[$key]) && is_array($profile[$key])) : ?>
             <h4><?php echo esc_html($heading); ?></h4>
-            <<?php echo $key === 'getting_started' ? 'ol' : 'ul'; ?>>
+            <<?php echo $key === 'getting_started' ? 'ol' : 'ul'; ?><?php echo $key === 'features' ? ' class="feat"' : ''; ?>>
               <?php foreach ($profile[$key] as $text) : if (!is_string($text)) { continue; } ?>
                 <li><?php echo esc_html($text); ?></li>
               <?php endforeach; ?>
@@ -234,6 +234,97 @@ function ws_github_render_details($repo, $profile, $base) {
       </div>
     </details>
     <?php
+}
+
+/** Render one public repository from the last successful sync. */
+function ws_github_render_project_page($name) {
+    if (!is_string($name) || !preg_match('/^[A-Za-z0-9._-]+$/D', $name)) {
+        return false;
+    }
+    $data = get_option(WS_GITHUB_DATA, array());
+    $repos = isset($data['repos']) && is_array($data['repos']) ? $data['repos'] : array();
+    $repo = null;
+    foreach ($repos as $item) {
+        if (is_array($item) && !empty($item['name']) && empty($item['private']) && $item['name'] === $name) {
+            $repo = $item;
+            break;
+        }
+    }
+    if (!$repo) {
+        return false;
+    }
+
+    $base = 'https://github.com/' . WS_GITHUB_USER . '/' . rawurlencode($name);
+    $profile = ws_github_project_details($name);
+    $title = !empty($profile['title']) ? $profile['title'] : $name;
+    $description = !empty($profile['summary']) ? $profile['summary'] : (!empty($repo['description']) ? $repo['description'] : '暂无项目简介。');
+    $release = isset($repo['release']) && is_array($repo['release']) ? $repo['release'] : array();
+    $assets = isset($release['assets']) && is_array($release['assets']) ? $release['assets'] : array();
+    $published = !empty($release['published_at']) && strtotime($release['published_at']) ? wp_date('Y-m-d', strtotime($release['published_at'])) : '';
+    $created = !empty($repo['created_at']) && strtotime($repo['created_at']) ? wp_date('Y-m-d', strtotime($repo['created_at'])) : '';
+    ob_start();
+    ?>
+    <div class="ws-project-detail-page">
+      <div class="page-head">
+        <p><a href="<?php echo esc_url(home_url('/projects/')); ?>">← 全部项目</a></p>
+        <h1 class="sec-title"><?php echo esc_html($title); ?></h1>
+        <?php if ($title !== $name) : ?><p class="ws-project-repository"><?php echo esc_html($name); ?></p><?php endif; ?>
+        <p class="sec-sub"><?php echo esc_html($description); ?></p>
+        <div class="links">
+          <a class="btn gold" href="<?php echo esc_url($base . '/releases'); ?>" target="_blank" rel="noopener noreferrer"><?php echo !empty($release['tag']) ? '下载 ' . esc_html($release['tag']) : '查看发布与下载'; ?></a>
+          <a class="btn" href="<?php echo esc_url($base); ?>" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </div>
+      <section class="card ws-project-detail-info" aria-labelledby="ws-project-info-heading">
+        <h2 id="ws-project-info-heading">仓库信息</h2>
+        <div class="kv">
+          <div><b>仓库</b><span><a href="<?php echo esc_url($base); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html(WS_GITHUB_USER . '/' . $name); ?></a></span></div>
+          <?php if (!empty($repo['language'])) : ?><div><b>主要语言</b><span><?php echo esc_html($repo['language']); ?></span></div><?php endif; ?>
+          <?php if (!empty($repo['license'])) : ?><div><b>许可证</b><span><?php echo esc_html($repo['license']); ?></span></div><?php endif; ?>
+          <?php if (!empty($release['tag'])) : ?><div><b>最新版本</b><span><?php echo esc_html($release['tag']); ?><?php if ($published) : ?>（<?php echo esc_html($published); ?> 发布）<?php endif; ?></span></div><?php endif; ?>
+          <?php if ($assets) : ?><div><b>下载文件</b><span><?php echo esc_html((string) count($assets)); ?> 个</span></div><?php endif; ?>
+          <?php if (!empty($repo['branch'])) : ?><div><b>默认分支</b><span><?php echo esc_html($repo['branch']); ?></span></div><?php endif; ?>
+          <?php if ($created) : ?><div><b>创建时间</b><span><?php echo esc_html($created); ?></span></div><?php endif; ?>
+        </div>
+      </section>
+      <div class="grid p2 ws-project-detail-sections">
+        <section class="card" aria-labelledby="ws-project-features-heading">
+          <h2 id="ws-project-features-heading">核心功能</h2>
+          <?php if (!empty($profile['features']) && is_array($profile['features'])) : ?><ul class="feat"><?php foreach ($profile['features'] as $feature) : if (!is_string($feature)) { continue; } ?><li><?php echo esc_html($feature); ?></li><?php endforeach; ?></ul>
+          <?php else : ?><p class="desc">项目功能请查看仓库 README。</p><?php endif; ?>
+        </section>
+        <section class="card prose" aria-labelledby="ws-project-start-heading">
+          <h2 id="ws-project-start-heading">开始使用</h2>
+          <?php if (!empty($profile['getting_started']) && is_array($profile['getting_started'])) : ?><ol><?php foreach ($profile['getting_started'] as $step) : if (!is_string($step)) { continue; } ?><li><?php echo esc_html($step); ?></li><?php endforeach; ?></ol>
+          <?php else : ?><p class="desc">安装与使用步骤请查看仓库 README。</p><?php endif; ?>
+          <?php if (!empty($profile['notes']) && is_array($profile['notes'])) : ?><h3>使用说明</h3><ul><?php foreach ($profile['notes'] as $note) : if (!is_string($note)) { continue; } ?><li><?php echo esc_html($note); ?></li><?php endforeach; ?></ul><?php endif; ?>
+        </section>
+      </div>
+      <section class="card ws-project-detail-docs" aria-labelledby="ws-project-docs-heading">
+        <h2 id="ws-project-docs-heading">文档与版本</h2>
+        <div class="links">
+          <a class="btn small" href="<?php echo esc_url($base . '#readme'); ?>" target="_blank" rel="noopener noreferrer">阅读完整使用说明</a>
+          <a class="btn small" href="<?php echo esc_url($base . '/releases'); ?>" target="_blank" rel="noopener noreferrer">版本说明与历史下载</a>
+          <?php foreach (isset($profile['links']) && is_array($profile['links']) ? $profile['links'] : array() as $link) : ?>
+            <?php if (!is_array($link) || !is_string($link['label'] ?? null) || !is_string($link['url'] ?? null) || strpos($link['url'], $base . '/') !== 0) { continue; } ?>
+            <a class="btn small" href="<?php echo esc_url($link['url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($link['label']); ?></a>
+          <?php endforeach; ?>
+        </div>
+        <?php if (!empty($profile['verified_on'])) : ?><p class="ws-project-detail-note">项目介绍整理自公开仓库文档，核对日期：<?php echo esc_html($profile['verified_on']); ?>。后续变更以仓库最新说明为准。</p><?php endif; ?>
+      </section>
+      <?php if ($assets) : ?>
+        <section class="card ws-project-detail-downloads" aria-labelledby="ws-project-downloads-heading">
+          <h2 id="ws-project-downloads-heading">最新版本下载文件（<?php echo esc_html((string) count($assets)); ?>）</h2>
+          <div class="links ws-project-assets">
+            <?php foreach ($assets as $asset) : if (!is_array($asset) || !is_string($asset['url'] ?? null) || !is_string($asset['name'] ?? null)) { continue; } ?>
+              <a class="btn small" href="<?php echo esc_url($asset['url']); ?>" target="_blank" rel="noopener noreferrer">下载 <?php echo esc_html($asset['name']); ?><?php if (!empty($asset['size'])) : ?>（<?php echo esc_html(size_format($asset['size'], 1)); ?>）<?php endif; ?></a>
+            <?php endforeach; ?>
+          </div>
+        </section>
+      <?php endif; ?>
+    </div>
+    <?php
+    return ob_get_clean();
 }
 
 function ws_github_shortcode($atts) {
@@ -281,16 +372,16 @@ function ws_github_shortcode($atts) {
             $title = !empty($profile['title']) ? $profile['title'] : $name;
             $search_text = implode(' ', array_merge(array($name, $title, $description), $profile['features'] ?? array(), $repo['topics'] ?? array()));
             ?>
-          <article class="ws-project-card" data-search="<?php echo esc_attr(strtolower($search_text)); ?>" data-language="<?php echo esc_attr($repo['language']); ?>" data-stars="<?php echo esc_attr((string) $repo['stars']); ?>" data-updated="<?php echo esc_attr($repo['updated_at']); ?>" data-name="<?php echo esc_attr(strtolower($name)); ?>">
+          <article class="ws-project-card card tilt" data-search="<?php echo esc_attr(strtolower($search_text)); ?>" data-language="<?php echo esc_attr($repo['language']); ?>" data-stars="<?php echo esc_attr((string) $repo['stars']); ?>" data-updated="<?php echo esc_attr($repo['updated_at']); ?>" data-name="<?php echo esc_attr(strtolower($name)); ?>">
             <h3><a href="<?php echo esc_url($base); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($title); ?></a></h3>
             <?php if ($title !== $name) : ?><p class="ws-project-repository"><?php echo esc_html($name); ?></p><?php endif; ?>
-            <p class="ws-project-description"><?php echo esc_html($description); ?></p>
-            <p class="ws-project-facts">
-              <?php if ($repo['language']) : ?><span><?php echo esc_html($repo['language']); ?></span><?php endif; ?>
-              <span>★ <?php echo esc_html((string) $repo['stars']); ?></span>
-              <?php if ($date) : ?><span>更新于 <?php echo esc_html($date); ?></span><?php endif; ?>
-              <?php if (!empty($repo['fork'])) : ?><span>派生项目</span><?php endif; ?>
-              <?php if (!empty($repo['archived'])) : ?><span>已归档</span><?php endif; ?>
+            <p class="ws-project-description desc"><?php echo esc_html($description); ?></p>
+            <p class="ws-project-facts meta">
+              <?php if ($repo['language']) : ?><span class="m"><?php echo esc_html($repo['language']); ?></span><?php endif; ?>
+              <span class="m">★ <?php echo esc_html((string) $repo['stars']); ?></span>
+              <?php if ($date) : ?><span class="m">更新于 <?php echo esc_html($date); ?></span><?php endif; ?>
+              <?php if (!empty($repo['fork'])) : ?><span class="m">派生项目</span><?php endif; ?>
+              <?php if (!empty($repo['archived'])) : ?><span class="m">已归档</span><?php endif; ?>
             </p>
             <?php if (!empty($repo['release']) && is_array($repo['release'])) : ?>
               <p class="ws-project-release">最新版本：<?php echo esc_html($repo['release']['tag'] ?? ''); ?><?php
@@ -302,13 +393,14 @@ function ws_github_shortcode($atts) {
                 <a href="<?php echo esc_url($asset['url']); ?>" target="_blank" rel="noopener noreferrer">下载 <?php echo esc_html($asset['name']); ?><?php if (!empty($asset['size'])) : ?>（<?php echo esc_html(size_format($asset['size'], 1)); ?>）<?php endif; ?></a>
               <?php endforeach; ?></div></details><?php endif; ?>
             <?php endif; ?>
-            <div class="ws-project-links">
-              <a href="<?php echo esc_url($base); ?>" target="_blank" rel="noopener noreferrer">源码</a>
-              <a href="<?php echo esc_url($base . '#readme'); ?>" target="_blank" rel="noopener noreferrer">README</a>
-              <?php if (!empty($repo['issues'])) : ?><a href="<?php echo esc_url($base . '/issues'); ?>" target="_blank" rel="noopener noreferrer">议题</a><?php endif; ?>
-              <a href="<?php echo esc_url($base . '/releases'); ?>" target="_blank" rel="noopener noreferrer">发布与附件</a>
-              <?php if ($branch) : ?><a href="<?php echo esc_url('https://github.com/' . WS_GITHUB_USER . '/' . rawurlencode($name) . '/archive/refs/heads/' . rawurlencode($branch) . '.zip'); ?>">源码 ZIP</a><?php endif; ?>
-              <?php if (!empty($repo['homepage'])) : ?><a href="<?php echo esc_url($repo['homepage']); ?>" target="_blank" rel="noopener noreferrer">项目网站</a><?php endif; ?>
+            <div class="ws-project-links links">
+              <a class="btn small" href="<?php echo esc_url(add_query_arg('project', $name, home_url('/projects/'))); ?>">查看详情</a>
+              <a class="btn small" href="<?php echo esc_url($base); ?>" target="_blank" rel="noopener noreferrer">源码</a>
+              <a class="btn small" href="<?php echo esc_url($base . '#readme'); ?>" target="_blank" rel="noopener noreferrer">README</a>
+              <?php if (!empty($repo['issues'])) : ?><a class="btn small" href="<?php echo esc_url($base . '/issues'); ?>" target="_blank" rel="noopener noreferrer">议题</a><?php endif; ?>
+              <a class="btn small" href="<?php echo esc_url($base . '/releases'); ?>" target="_blank" rel="noopener noreferrer">发布与附件</a>
+              <?php if ($branch) : ?><a class="btn small" href="<?php echo esc_url('https://github.com/' . WS_GITHUB_USER . '/' . rawurlencode($name) . '/archive/refs/heads/' . rawurlencode($branch) . '.zip'); ?>">源码 ZIP</a><?php endif; ?>
+              <?php if (!empty($repo['homepage'])) : ?><a class="btn small" href="<?php echo esc_url($repo['homepage']); ?>" target="_blank" rel="noopener noreferrer">项目网站</a><?php endif; ?>
             </div>
             <?php ws_github_render_details($repo, $profile, $base); ?>
           </article>

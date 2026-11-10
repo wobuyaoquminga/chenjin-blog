@@ -4,7 +4,7 @@
 
 ## 1. 准备组件
 
-从 [最新发布页](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 下载 News 子主题和两个插件 ZIP。父主题 Blocksy 从 WordPress 官方主题目录安装，不包含在本仓库发布包中。
+从 [最新发布页](https://github.com/wobuyaoquminga/chenjin-blog/releases/latest) 下载 News 子主题和两个插件 ZIP，核对发布页实际版本。4.0.0 组件组合为 `chenjin-news` 4.0.0、`chenjin-github` 1.2.0、`chenjin-contact` 1.0.0。父主题 Blocksy 从 WordPress 官方主题目录安装，不包含在本仓库发布包中。
 
 当前验证环境为 WordPress 7.1.4、Blocksy 2.1.61、PHP 8.3；子主题声明要求 WordPress 6.7+ 与 PHP 7.4+，声明最低要求不等于每种环境都已验收。
 
@@ -34,7 +34,7 @@ const WS_GITHUB_USER = 'wobuyaoquminga';
 
 - `home`：首页，正文可留空，子主题显示最新文章。
 - `articles`：文章页，正文留空，由 WordPress 显示原生文章归档。
-- `projects`：项目页，添加短代码区块 `[ws_projects]`。
+- `projects`：项目页，添加短代码区块 `[ws_projects]`；站内详情使用同一页的 `?project=仓库名` 查询参数。
 - `contact`：联系页，添加短代码区块 `[chenjin_contact]`。
 - `about`：填写自己的介绍。
 - `privacy`：根据实际部署说明评论、联系、Cookie 和访问日志等数据处理。
@@ -45,7 +45,7 @@ const WS_GITHUB_USER = 'wobuyaoquminga';
 
 ## 5. 配置主题导航与可选文章卡片
 
-站点名称在「设置 → 常规」维护，Logo 使用「外观 → 自定义」的站点标识。创建 WordPress 菜单并分配到 `menu_1` 主导航位置。黑曜石暗色皮肤、页头页脚及导航交互由子主题维护，部分 Blocksy 页头外观选项不会生效。
+站点名称在「设置 → 常规」维护，Logo 使用「外观 → 自定义」的站点标识。创建 WordPress 菜单并分配到 `menu_1` 主导航位置。金色、冰蓝和紫色银河皮肤、页头页脚及导航交互由子主题维护，部分 Blocksy 页头外观选项不会生效。
 
 已获批的备案号可在「设置 → 常规 → 网站备案号」填写，页脚会自动展示；发布包不包含演示站点的备案配置。
 
@@ -57,11 +57,11 @@ wp --path=/your/wordpress/path eval-file /path/to/chenjin-blog/deploy/configure-
 
 该命令可初始化部分 Blocksy 文章卡片样式，**不会导入旧浅色模板，也不负责子主题整体皮肤或导航交互**。它不创建页面和文章；初始化标记存在时再次运行会跳过。
 
-演示品牌“陈今”、介绍文字和默认装饰封面来自子主题代码；复用时可在 `header.php`、`front-page.php`、`footer.php`、`assets/` 与站点设置中替换。不要修改 Blocksy 父主题文件。
+演示品牌“陈今”、首页标题和默认装饰封面来自子主题代码；复用时可在 `header.php`、`front-page.php`、`footer.php`、`assets/` 与站点设置中替换。不要修改 Blocksy 父主题文件。Muse 外观已写入 WordPress 模板，页面中的文章和项目仍读取真实站点数据。
 
 ## 6. 同步与收件
 
-进入「设置 → GitHub 项目」点击「立即同步」。发布一个项目页后检查仓库、Release、附件链接和筛选状态。若首次同步失败，后台显示错误；网络恢复后再次同步。
+进入「设置 → GitHub 项目」点击「立即同步」。发布一个项目页后检查仓库、站内详情、Release、附件链接和筛选状态。站内详情仅允许访问已同步公开仓库缓存，不用于查看私有或任意仓库；示例路径为 `/projects/?project=chenjin-blog`。若首次同步失败，后台显示错误；网络恢复后再次同步。
 
 每小时事件由 WordPress Cron 调度。低访问量站点如需固定频率，应由服务器定时执行到期 Cron 事件；不要重复注册大量任务。
 

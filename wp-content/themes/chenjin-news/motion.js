@@ -8,7 +8,7 @@
   const nav = document.getElementById('cjn-nav');
   const searchButton = document.querySelector('button[data-cjn-search][aria-controls="cjn-search"]');
   const search = document.getElementById('cjn-search');
-  document.querySelectorAll('.ws-project-card, .entries .entry-card').forEach(item => item.setAttribute('data-reveal', ''));
+  document.querySelectorAll('.ws-project-card, .card, .entries .entry-card').forEach(item => item.setAttribute('data-reveal', ''));
   const revealItems = [...document.querySelectorAll('[data-reveal]')];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = matchMedia('(max-width: 900px)');

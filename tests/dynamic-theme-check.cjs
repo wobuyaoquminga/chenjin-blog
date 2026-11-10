@@ -31,13 +31,15 @@ async function main() {
       scrollTo({ top: 0, behavior: 'instant' });
     });
     await page.waitForTimeout(800);
+    const captureStyle = await page.addStyleTag({ content: '[data-reveal]{opacity:1!important;transform:none!important}' });
     await page.screenshot({ path: path.join(out, filename), fullPage: true });
+    await captureStyle.evaluate(element => element.remove());
   }
   try {
     await visit('/');
     assert.equal(await page.locator('h1').count(), 1);
     assert.equal(await page.locator('.cjn-orbit, .cjn-kicker, .cjn-marquee, .cjn-section-index, .cjn-outro').count(), 0);
-    assert.equal(await page.locator('.cjn-hero p').count(), 0, 'No auxiliary hero copy');
+    assert.equal(await page.locator('.hero-copy p').count(), 0, 'No auxiliary hero copy');
     await page.locator('[data-solar-system][data-solar-state=ready]').waitFor({timeout:60000});
     await capture('home-desktop.png');
     await page.locator('[data-cjn-search]').click();

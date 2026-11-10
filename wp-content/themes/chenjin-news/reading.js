@@ -1,5 +1,5 @@
 (() => {
-  const content = document.querySelector('.single-post .entry-content');
+  const content = document.querySelector('.single-post .post-body');
   if (!content) return;
   const headings = [...content.querySelectorAll('h2,h3')];
   if (headings.length) {
@@ -14,7 +14,9 @@
       const link = document.createElement('a'); link.href = '#' + encodeURIComponent(heading.id); link.textContent = heading.textContent.trim();
       item.append(link); list.append(item);
     });
-    toc.append(summary, list); content.prepend(toc);
+    toc.append(summary, list);
+    const aside = document.getElementById('postToc');
+    if (aside) { const title = document.createElement('b'); title.textContent = '本文目录'; aside.replaceChildren(title, list); } else { content.prepend(toc); }
   }
   content.querySelectorAll('pre').forEach(pre => {
     const code = pre.querySelector('code');

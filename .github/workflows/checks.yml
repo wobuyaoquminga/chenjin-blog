@@ -19,6 +19,7 @@ jobs:
         run: |
           node --check wp-content/themes/chenjin-news/reading.js
           node --check wp-content/themes/chenjin-news/motion.js
+          node --check wp-content/themes/chenjin-news/muse-effects.js
           node --input-type=module --check < wp-content/themes/chenjin-news/solar-system.js
           node --check tests/solar-system-check.cjs
           node --check wp-content/plugins/chenjin-github/projects.js

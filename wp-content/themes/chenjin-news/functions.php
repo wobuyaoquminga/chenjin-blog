@@ -1,5 +1,5 @@
 <?php
-/** Preserve the mature parent's templates and add only site-specific presentation. */
+/** Muse presentation integrated with WordPress and Blocksy. */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Pagination belongs to the native article archive, not the static homepage.
@@ -14,12 +14,15 @@ add_action( 'template_redirect', function () {
 add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
     wp_enqueue_style( 'chenjin-news', get_stylesheet_uri(), array( 'ct-main-styles' ), $version . '.' . filemtime( get_stylesheet_directory() . '/style.css' ) );
+    wp_enqueue_script( 'chenjin-muse-effects', get_stylesheet_directory_uri() . '/muse-effects.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/muse-effects.js' ), true );
     wp_enqueue_script( 'chenjin-news-motion', get_stylesheet_directory_uri() . '/motion.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/motion.js' ), true );
     if ( is_front_page() ) {
-        wp_enqueue_script( 'chenjin-solar-system', get_stylesheet_directory_uri() . '/solar-system.min.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/solar-system.min.js' ), true );
+        wp_enqueue_script( 'chenjin-muse-three', get_stylesheet_directory_uri() . '/assets/vendor/muse-three.js', array(), $version, true );
+        wp_enqueue_script( 'chenjin-solar-system', get_stylesheet_directory_uri() . '/solar-system.min.js', array( 'chenjin-muse-three' ), $version . '.' . filemtime( get_stylesheet_directory() . '/solar-system.min.js' ), true );
     }
     if ( is_singular( 'post' ) ) {
         wp_enqueue_script( 'chenjin-news-reading', get_stylesheet_directory_uri() . '/reading.js', array(), $version . '.' . filemtime( get_stylesheet_directory() . '/reading.js' ), true );
+        if ( comments_open() && get_option( 'thread_comments' ) ) { wp_enqueue_script( 'comment-reply' ); }
     }
 }, 20 );
 
@@ -62,3 +65,5 @@ add_action( 'wp_head', function () {
         echo '<link rel="icon" type="image/svg+xml" href="' . esc_url( add_query_arg( 'v', wp_get_theme()->get( 'Version' ), get_stylesheet_directory_uri() . '/assets/icon.svg' ) ) . '">';
     }
 } );
+
+require_once get_stylesheet_directory() . '/inc/muse-content.php';

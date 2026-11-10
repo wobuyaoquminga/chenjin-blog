@@ -33,6 +33,8 @@ function wp_date($format, $time = null) { return gmdate($format, $time ?? time()
 function shortcode_atts($defaults, $atts, $name) { return array_merge($defaults, $atts); }
 function size_format($size, $precision) { return (string) $size; }
 
+function home_url($path = '') { return 'https://example.test/blog/' . ltrim($path, '/'); }
+function add_query_arg($key, $value, $url) { return $url . (strpos($url, '?') === false ? '?' : '&') . rawurlencode($key) . '=' . rawurlencode($value); }
 require __DIR__ . '/chenjin-github.php';
 
 function repo($id, $private = false) {
@@ -97,4 +99,13 @@ check(ws_github_project_details('unknown-future-project') === array(), 'New proj
 check(!empty(ws_github_project_details('chenjin-blog')['features']), 'Reviewed project catalog missing');
 $page = ws_github_shortcode(array());
 check(strpos($page, 'ws-project-details') !== false && strpos($page, 'README') !== false, 'Existing cached projects must render details without re-sync');
+check(strpos(ws_github_render_project_page('repo-1'), 'app.apk') !== false, 'Standalone project must retain validated release downloads');
+foreach (array('missing', '../repo-1', '<script>', array('repo-1')) as $invalid) {
+    check(ws_github_render_project_page($invalid) === false, 'Unknown or malformed project must not render');
+}
+$private = $partial['repos'][0];
+$private['name'] = 'private-project';
+$private['private'] = true;
+$options[WS_GITHUB_DATA]['repos'][] = $private;
+check(ws_github_render_project_page('private-project') === false, 'Private cached repository must not render');
 echo "同步检查通过\n";

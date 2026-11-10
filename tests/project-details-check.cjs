@@ -49,6 +49,20 @@ async function main() {
     }
     await page.locator('.ws-project-details summary').first().click();
     await page.screenshot({ path: path.join(output, 'mobile.png'), fullPage: true });
+    for (const [name, profile] of Object.entries(catalog)) {
+      const detail = await page.goto(base + '/projects/?project=' + encodeURIComponent(name), { waitUntil: 'networkidle' });
+      assert.equal(detail.status(), 200, name + ' standalone page');
+      assert.equal(await page.locator('h1').innerText(), profile.title);
+      const body = await page.locator('.ws-project-detail-page').innerText();
+      assert.ok(body.includes(profile.features[0]) && body.includes(profile.getting_started[0]));
+      assert.ok(await page.locator('.ws-project-detail-docs a').count() >= 2);
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), name + ' detail mobile overflow');
+    }
+    for (const query of ['project=does-not-exist-qa', 'project=%3Cscript%3E', 'project[]=chenjin-blog']) {
+      const missing = await page.goto(base + '/projects/?' + query, { waitUntil: 'domcontentloaded' });
+      assert.equal(missing.status(), 404, 'Invalid project returns 404');
+      assert.equal(await page.locator('.ws-project-detail-page').count(), 0);
+    }
     assert.deepEqual(errors, []);
     console.log('All reviewed project details, usage, documentation, Chinese search, expand/collapse and mobile layout passed.');
   } finally { await browser.close(); }

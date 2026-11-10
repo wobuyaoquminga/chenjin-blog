@@ -1,68 +1,31 @@
 <?php
-/** Homepage: a visual introduction to the site's real posts and public projects. */
+/** Muse's galaxy design with live WordPress content and public repositories. */
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 get_header();
-
-$GLOBALS['chenjin_news_front'] = true;
-$articles = new WP_Query( array(
-    'post_type'           => 'post',
-    'post_status'         => 'publish',
-    'posts_per_page'      => 4,
-    'ignore_sticky_posts' => true,
-) );
-$articles_page = (int) get_option( 'page_for_posts' );
-$articles_url = $articles_page ? get_permalink( $articles_page ) : home_url( '/articles/' );
-$projects_url = home_url( '/projects/' );
+$articles = new WP_Query( array( 'post_type'=>'post', 'post_status'=>'publish', 'posts_per_page'=>4, 'ignore_sticky_posts'=>true ) );
+$posts_page=(int)get_option('page_for_posts');
+$articles_url=$posts_page?get_permalink($posts_page):home_url('/articles/');
 ?>
-<div class="cjn-home">
-    <section class="cjn-hero cjn-shell" aria-labelledby="cjn-hero-title">
-        <div class="cjn-hero-content">
-        <h1 id="cjn-hero-title" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" data-reveal>
-            <?php if ( '陈今的博客' === get_bloginfo( 'name' ) ) : ?>
-                <span class="cjn-title-name" aria-hidden="true">陈今</span>
-                <span class="cjn-title-rest" aria-hidden="true">的博客</span>
-            <?php else : ?>
-                <span class="cjn-title-name"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
-            <?php endif; ?>
-        </h1>
-        </div>
-        <section id="solar-system" class="cjn-solar" data-solar-system aria-label="三维太阳系运行模型" aria-description="行星贴图：Solar System Scope，CC BY 4.0；各天体以不同的固定速度自转和公转，尺寸、距离与速度用于演示。">
-            <div class="cjn-solar-viewport" tabindex="0" aria-label="拖动旋转三维太阳系，滚轮或双指缩放"></div>
-            <div class="cjn-solar-fallback">
-                <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/saturn-cassini.jpg' ); ?>" width="1536" height="785" alt="土星 — NASA/JPL/Space Science Institute">
-            </div>
-        </section>
-    </section>
-
-    <section id="featured-projects" class="cjn-section cjn-project-section cjn-shell" aria-labelledby="cjn-project-title">
-        <div class="cjn-section-heading" data-reveal>
-            <h2 id="cjn-project-title">项目</h2>
-            <a class="cjn-section-link" href="<?php echo esc_url( $projects_url ); ?>">全部项目 <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="cjn-project-stage" data-reveal>
-            <?php if ( shortcode_exists( 'ws_projects' ) ) : ?>
-                <?php echo do_shortcode( '[ws_projects limit="4"]' ); // The shortcode escapes repository data. ?>
-            <?php else : ?>
-                <p class="cjn-empty">项目列表暂时不可用。<a href="<?php echo esc_url( $projects_url ); ?>">前往项目页</a></p>
-            <?php endif; ?>
-        </div>
-    </section>
-
-    <section id="latest-articles" class="cjn-section cjn-article-section cjn-shell" aria-labelledby="cjn-article-title">
-        <div class="cjn-section-heading" data-reveal>
-            <h2 id="cjn-article-title">文章</h2>
-            <a class="cjn-section-link" href="<?php echo esc_url( $articles_url ); ?>">全部文章 <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="cjn-article-stage">
-            <?php if ( $articles->have_posts() ) : ?>
-                <?php echo blocksy_render_archive_cards( array( 'query' => $articles, 'prefix' => 'blog', 'has_pagination' => false ) ); ?>
-            <?php else : ?>
-                <p class="cjn-empty">暂无文章。查看<a href="<?php echo esc_url( $projects_url ); ?>">公开项目</a>。</p>
-            <?php endif; ?>
-        </div>
-    </section>
-
-</div>
-<?php
-wp_reset_postdata();
-unset( $GLOBALS['chenjin_news_front'] );
-get_footer();
+<section class="view active cjn-home" data-view="home">
+ <div class="hero">
+  <div class="hero-stage">
+   <div class="hero-copy">
+    <h1 id="heroTitle" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>"><?php echo esc_html(get_bloginfo('name')); ?></h1>
+    <div class="hero-cta"><a class="btn gold" href="<?php echo esc_url(home_url('/projects/')); ?>">看项目</a><a class="btn" href="<?php echo esc_url($articles_url); ?>">读文章</a></div>
+   </div>
+   <div class="hero-canvas-wrap cjn-solar" id="glWrap" data-solar-system>
+    <canvas id="gl" aria-label="三维星系中的太阳系，可拖动旋转、缩放和点击星体聚焦"></canvas>
+    <div id="glError" role="status"></div><noscript><div class="muse-static-sky"><img src="<?php echo esc_url(get_stylesheet_directory_uri().'/assets/saturn-cassini.jpg'); ?>" alt="土星 — NASA/JPL/Space Science Institute"></div></noscript>
+   </div>
+  </div><div class="hero-fade" aria-hidden="true"></div>
+ </div>
+ <div class="wrap">
+  <section class="block" id="featured-projects"><div class="sec-head" data-reveal><h2 class="sec-title">开源项目</h2><a class="more" href="<?php echo esc_url(home_url('/projects/')); ?>">全部项目 →</a></div>
+   <?php if(shortcode_exists('ws_projects')){echo do_shortcode('[ws_projects limit="4"]');} ?>
+  </section>
+  <section class="block" id="latest-articles"><div class="sec-head" data-reveal><h2 class="sec-title">最新文章</h2><a class="more" href="<?php echo esc_url($articles_url); ?>">全部文章 →</a></div>
+   <div class="grid p2"><?php while($articles->have_posts()):$articles->the_post(); chenjin_muse_post_card(); endwhile; ?></div>
+  </section>
+ </div>
+</section>
+<?php wp_reset_postdata(); get_footer(); ?>
